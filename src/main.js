@@ -22,6 +22,10 @@ const routes = [
   { path: '/personal/about', component: About }
 ]
 
+/* 启动应用前，设置 Vonic.app 的 pushMethod 选项为 replace 可以全局禁用浏览器 history */
+/* 即，$router.forward()、$router.back() 不再新增浏览记录 */
+Vonic.app.setConfig('pushMethod', 'replace')
+
 Vue.use(Vonic.app, {
   routes: routes
 })

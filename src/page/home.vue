@@ -1,11 +1,11 @@
 <template>
   <div class="page has-navbar" v-nav="{ title: '首页' }" v-tabbar="{'menus': menus, menuColor: '#a1a1a1', activeMenuColor: '#444', onMenuClick: menuClicked}">
-    <div class="page-content ">
+    <div class="page-content " style="overflow:scroll;">
       <div style="margin-top:5px;">
         <swiper ref="swiper"
           direction="horizontal"
           width="100%"
-          height="150"
+          height="170"
           pager-color="#ea5a49"
           pager-bg-color="#e5e4e3"
           hide-pager="false"
@@ -40,12 +40,12 @@
     data() {
       return {
         entrances: [
-         '<div class="entrance assertive"><img class="nav-img" src="static/image/join-buy.jpg"/><br><span>合买大厅</span></div>',
-         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/join-buy.jpg"/><br><span>天天彩票</span></div>',
-         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/join-buy.jpg"/><br><span>系统公告</span></div>',
-         '<div class="entrance assertive"><img class="nav-img" src="static/image/join-buy.jpg"/><br><span>充值中心</span></div>',
-         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/join-buy.jpg"/><br><span>我要提现</span></div>',
-         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/join-buy.jpg"/><br><span>历史投注</span></div>'
+         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_buy.png"/><br><span>合买大厅</span></div>',
+         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_lottery.png"/><br><span>天天彩票</span></div>',
+         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_notice.png"/><br><span>系统公告</span></div>',
+         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_recharge.png"/><br><span>充值中心</span></div>',
+         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_cash.png"/><br><span>我要提现</span></div>',
+         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_history.png"/><br><span>历史投注</span></div>'
 
 
        ],
