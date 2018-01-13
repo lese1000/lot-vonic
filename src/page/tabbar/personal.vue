@@ -1,5 +1,5 @@
 <template>
-  <div class="page has-navbar" v-nav="{ title: '个人中心'}">
+  <div class="page has-navbar has-tabbar" v-nav="{ title: '个人中心'}" v-tabbar-menu-index="2">
     <div class="page-content">
 
       <list class="list-ios hl-list-borderless">
@@ -24,7 +24,7 @@
 
       <div class="padding">
         <div class="padding">
-          <button class="button button-assertive button-block" @click="doLogin">退出登录</button>
+          <button class="button button-assertive button-block" @click="loginout">退出登录</button>
         </div>
       </div>
     </div>
@@ -35,6 +35,9 @@
     methods: {
       back() {
         $router.back('/')
+      },
+      loginout(){
+
       }
     }
   }

@@ -1,6 +1,6 @@
 <template>
-  <div class="page has-navbar" v-nav="{ title: '首页' }" v-tabbar="{'menus': menus, menuColor: '#a1a1a1', activeMenuColor: '#444', onMenuClick: menuClicked}">
-    <div class="page-content " style="overflow:scroll;">
+  <div class="page has-navbar has-tabbar" v-nav="{ title: '首页' }" v-tabbar-menu-index="0" >
+    <div class="page-content " >
       <div style="margin-top:5px;">
         <swiper ref="swiper"
           direction="horizontal"
@@ -49,27 +49,8 @@
 
 
        ],
-       menus: [
-         {
-           iconOn: 'ion-ios-home',
-           iconOff: 'ion-ios-home-outline',
-           text: '首页',
-           path: '/home'
-         },
-         {
-           iconOn: 'ion-ios-pricetags',
-           iconOff: 'ion-ios-pricetags-outline',
-           text: '最新活动',
-           path: '/advanced/tabbar/discount'
-         },
 
-         {
-           iconOn: 'ion-ios-person',
-           iconOff: 'ion-ios-person-outline',
-           text: '我的',
-           path: '/personal/personal'
-         }
-       ]
+       cellIndex:0
       }
     },
     methods: {
@@ -79,8 +60,31 @@
       onSwiperItemClick() {
 
       },
-      onCellClick() {
+      onCellClick(index) {
+        this.cellIndex = index;
+        console.log('cellIndex:'+this.cellIndex);
+        switch (index) {
+          case 0:
+            $router.forward('/joinbuy/index');
+            break;
+          case 1:
 
+            break;
+          case 2:
+
+            break;
+          case 3:
+
+            break;
+          case 4:
+
+            break;
+          case 5:
+
+            break;
+          default:
+
+        }
       },
       menuClicked(menuIndex) {
         console.log(menuIndex)

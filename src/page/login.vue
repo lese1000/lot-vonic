@@ -26,12 +26,12 @@
     methods:{
       doLogin() {
         console.log('do login ....');
-        $router.forward('/home')
+        $router.forward('/index/home')
       }
     },
     created() {
       this.$api.get('topics', null, r => {
-        console.log(r.data); 
+        console.log(r.data);
       })
     }
 
