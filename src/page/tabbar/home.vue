@@ -68,7 +68,7 @@
             $router.forward('/joinbuy/index');
             break;
           case 1:
-
+            $router.forward('/lottery/index');
             break;
           case 2:
 

@@ -1,18 +1,20 @@
 <template>
   <div class="page has-navbar" v-nav="{title: '合买大厅',showBackButton: true, onBackButtonClick: back }" ref="joinbuy" >
 
-    <div class="page-content " style="padding-bottom:40px;">
+    <div class="page-content ">
 
 
-        <scroll class="page-content" style="padding-bottom:50px;"
+        <scroll class="page-content"
                 :on-refresh="onRefresh"
                 :on-infinite="onInfinite">
+
+
                 <div class="card" v-for="(item, index) in items">
                   <div class="card-header">幸运五分彩{{index+1}}<span style="float:right"></span>第 20180113133 期</div>
                   <div class="card-content">
                     <div class="card-content-inner">
                       <div style="text-align:left;padding-bottom:5px;">
-                          <span style="color:red;">投注号码：</span><span>0,1,2,3,4,5,6,7,8,9</span>
+                          <span style="color:red;">投注号码：</span><span>0,1,2,3,4,5</span><span style="float:right;color:red;background-color:#e1dcdc;border-radius:5px;padding:0 3px;">未开奖</span>
                       </div>
 
                       <table class="gridtable" style="margin-top:5px;">
@@ -30,16 +32,11 @@
                           <td>500份</td>
                           <td>150%</td>
                         </tr>
-
                       </table>
-
-
-
-
 
                     </div>
                   </div>
-                  <div class="card-footer">发起人：李四<button class="button button-assertive button-small" style="float:right">参与合买</button></div>
+                  <div class="card-footer">发起人：李四<button class="button button-assertive button-small" style="float:right" @click="onJoinBuy(index)">参与合买</button></div>
                 </div>
 
           <div v-if="infiniteCount >= 2" slot="infinite" class="text-center">没有更多数据</div>
@@ -48,11 +45,14 @@
   </div>
 </template>
 <script>
+
   export default {
     data () {
       return {
         items: [],
-        infiniteCount: 0
+        infiniteCount: 0,
+        jionBuyList:[]
+
       }
     },
 
@@ -62,12 +62,9 @@
       }
       this.top = 1
       this.bottom = 10
-      let tabbar  = this.$refs.joinbuy.querySelectorAll('div.tabbar');
-      console.log(tabbar);
-      // tabbar.classList.remove("visible ");
-      this.$util.removeClass('visible',tabbar);
-
     },
+
+
     created(){
 
     },
@@ -100,17 +97,23 @@
           done()
         }, 1500)
       },
+      onJoinBuy (){
+        $router.forward("/joinbuy/dobuy");
+      },
 
       back (index) {
         $router.back("/index/home");
       }
-    }
+    },
+    destroyed() {
+
+   },
   }
 </script>
 
 <style>
 table.gridtable {
-  border: 1px solid #e6e3e3;
+  /* border: 1px solid #e6e3e3; */
   width: 100%;
 	font-family: verdana,arial,sans-serif;
   text-align: left;

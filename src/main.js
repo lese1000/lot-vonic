@@ -7,6 +7,7 @@ import util from './utils/index.js'
 // import '../static/css/sm.css'//import方式
 require('../static/css/sm.css')// require方式
 // require('../static/css/style.css')
+import '../static/js/zepto.min.js';
 
 // Page Components
 import Login from './page/login.vue'
@@ -26,7 +27,13 @@ import About from './page/personal/about.vue'
 
 //合买模块
 import JoinBuy from './page/joinbuy/joinbuy.vue'
+import DoBuy from './page/joinbuy/doBuy.vue'
 import JoinBuyDetail from './page/joinbuy/detail.vue'
+
+// 彩票模块
+import Lottery from './page/lottery/lottery.vue'
+import LotteryDetail from './page/lottery/lotteryDetail.vue'
+
 
 Vue.prototype.$api = api;
 Vue.prototype.$util = util;
@@ -54,8 +61,14 @@ const routes = [
 
 
 
+  //合买
   { path: '/joinbuy/index', component: JoinBuy },
-  { path: '/joinbuy/detail', component: JoinBuyDetail }
+  { path: '/joinbuy/dobuy', component: DoBuy },
+  { path: '/joinbuy/detail', component: JoinBuyDetail },
+
+  //彩票
+  { path: '/lottery/index', component: Lottery },
+  { path: '/Lottery/detail', component: LotteryDetail }
 
 ]
 
