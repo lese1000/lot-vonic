@@ -2,7 +2,7 @@
   <div class="page has-navbar" v-nav="{ title: '天天彩票', showBackButton: true, onBackButtonClick: back }">
     <div class="page-content">
       <list class="list-ios hl-list-borderless">
-        <item class=" item-icon-right" @click.native="$router.forward('/lottery/detail')">
+        <item class=" item-icon-right" @click.native="$router.forward('/lottery/luckfive')">
           幸运五分彩
           <span class="item-note">详情</span>
           <i class="icon ion-ios-arrow-right"></i>

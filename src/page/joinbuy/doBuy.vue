@@ -3,22 +3,23 @@
     <div class="page-content padding" >
 
       <list class="hl-list-borderless" style="margin-top:5px;">
-        <item class=" item-icon-right">
+
+        <item>
           可购买数量：<b style="color:red">100000</b> 份
         </item>
         <item>
           每份价格：100 元
         </item>
-        <item class="item-icon-right" >
-            <div style="font-size:14px;float:left;line-height:35px;margin-right:10px;">
-              购买数:
-            </div>
+        <item>
+          <div style="font-size:14px;float:left;line-height:35px;margin-right:10px;">
+            购买数:
+          </div>
 
-            <div class="gw_num">
-              <em   @click="doSub()">-</em>
-              <input id="buyNum" type="number" min="10" value="1" class="num"/>
-              <em  @click="doAdd()">+</em>
-            </div>
+          <div class="gw_num">
+            <em   @click="doSub()">-</em>
+            <input id="buyNum" type="number" v-model="buyNum" class="num"/>
+            <em class="add" @click="doAdd()">+</em>
+          </div>
         </item>
         <item>
           总金额：<span style="color:red">10000</span> 元
@@ -31,22 +32,22 @@
 </template>
 <script>
   export default {
+    data() {
+      return {
+        buyNum : 1
+      }
+    },
     methods: {
       back() {
         $router.back('/joinbuy/index')
       },
       doAdd() {
-        var n=$("#buyNum").val();
-        console.log(n);
-        var num=parseInt(n)+1;
-        if(num==0){ return;}
-        $("#buyNum").val(num);
+        this.buyNum ++;
       },
       doSub() {
-        var n=$("#buyNum").val();
-        var num=parseInt(n)-1;
-        if(num==0){ return}
-        $("#buyNum").val(num);
+        if(this.buyNum >= 2){
+          this.buyNum --;
+        }
       }
     }
   }

@@ -31,21 +31,19 @@
           <button class="circle-box-btn button button-small button-royal">清</button>
 
       </item>
-      <div class="item item-borderless hl-item">
-        <div class="hairline-top"></div>
-        <div class="hairline-bottom"></div>
+      <item>
         <div style="font-size:14px;float:left;line-height:35px;margin-right:10px;">
           共 1000 注，共 400000 元
         </div>
         <div class="gw_num" style="width:130px;height:2rem;">
-          <em  class="jian" @click="doSub()">-</em>
-          <input id="buyNum" type="number" min="10" value="1" class="num" style="width:60px;"/>
+          <em @click="doSub()">-</em>
+          <input type="number"  v-model="counter" class="num" style="width:60px;"/>
           <em class="add" @click="doAdd()">+</em>
         </div>
         <div style="font-size:14px;float:left;line-height:35px;margin-left:10px;">
           倍
         </div>
-      </div>
+      </item>
 
 
       <item>
@@ -53,15 +51,45 @@
           <button class=" button button-normal button-positive" style="float:right;">一键投注</button>
       </item>
       <item>
-          <div style="width:100%;height:100px;border:1px solid gray;">
+          <div style="width:100%;height:110px;border:1px solid #a59f9f;overflow:scroll;color:gray">
+              <table class="selected-num">
+                <tr>
+                  <td>0,1,2,3</td>
+                  <td>10 注</td>
+                  <td>10 倍</td>
+                  <td>20000元</td>
+                  <td><i class="icon ion-trash-a"></i></td>
+                </tr>
+                <tr>
+                  <td>0,1,2,</td>
+                  <td>10 注</td>
+                  <td>10 倍</td>
+                  <td>20000元</td>
+                  <td><i class="icon ion-trash-a"></i></td>
+                </tr>
+                <tr>
+                  <td>0,1,2,3,4,5,6,7,8,9</td>
+                  <td>10 注</td>
+                  <td>10 倍</td>
+                  <td>20000元</td>
+                  <td><i class="icon ion-trash-a"></i></td>
+                </tr>
+                <tr>
+                  <td>0,1,2,3,4,5,6,7,8,9</td>
+                  <td>10 注</td>
+                  <td>10 倍</td>
+                  <td>20000元</td>
+                  <td><i class="icon ion-trash-a"></i></td>
+                </tr>
 
+              </table>
           </div>
       </item>
       <item>
         <span>总注数：<b style="color:red">1000</b> 注,</span><span style="margin-left:10px;">总金额：<b style="color:red">100000</b> 元</span>
       </item>
       <item>
-        <button class=" button button-normal button-assertive" style="float:left;">发起合买</button>
+        <button @click="joinBuySetting" class=" button button-normal button-assertive" style="float:left;">发起合买</button>
         <button class=" button button-normal button-positive" style="float:right;">立即投注</button>
       </item>
 
@@ -86,17 +114,15 @@
         $router.back('/lottery/index')
       },
       doAdd() {
-        var n=$("#buyNum").val();
-        console.log(n);
-        var num=parseInt(n)+1;
-        if(num==0){ return;}
-        $("#buyNum").val(num);
+        this.counter ++;
       },
       doSub() {
-        var n=$("#buyNum").val();
-        var num=parseInt(n)-1;
-        if(num==0){ return}
-        $("#buyNum").val(num);
+        if(this.counter >=2){
+          this.counter --;
+        }
+      },
+      joinBuySetting() {
+        $router.forward('/lottery/joinbuysetting');
       }
 
 
@@ -115,5 +141,15 @@
       width:3rem;height:2rem;
       font-size: 16px;
       margin-top: 0.2rem;
+  }
+  table.selected-num{
+    width: 100%;
+  }
+  table.selected-num > tr {
+    border-bottom: 1px solid #e7dbdb;
+  }
+  table.selected-num > tr > td{
+    height: 20px;
+    padding: 2px 5px;
   }
 </style>

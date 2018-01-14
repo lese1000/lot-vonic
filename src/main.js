@@ -32,7 +32,8 @@ import JoinBuyDetail from './page/joinbuy/detail.vue'
 
 // 彩票模块
 import Lottery from './page/lottery/lottery.vue'
-import LotteryDetail from './page/lottery/lotteryDetail.vue'
+import LuckFive from './page/lottery/lotteryLuckFive.vue'
+import JoinBuySetting from './page/lottery/joinBuySetting.vue'
 
 
 Vue.prototype.$api = api;
@@ -68,7 +69,8 @@ const routes = [
 
   //彩票
   { path: '/lottery/index', component: Lottery },
-  { path: '/Lottery/detail', component: LotteryDetail }
+  { path: '/Lottery/luckfive', component: LuckFive },
+  { path: '/Lottery/joinbuysetting', component: JoinBuySetting }
 
 ]
 
