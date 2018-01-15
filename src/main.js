@@ -24,6 +24,13 @@ import Personal from './page/tabbar/personal.vue'
 // 个人中心
 import About from './page/personal/about.vue'
 
+// 活动
+import ActivityDetail from './page/activity/detail.vue'
+
+//通知
+import Notice from './page/notice/notice.vue'
+import NoticeDetail from './page/notice/noticeDetail.vue'
+
 
 //合买模块
 import JoinBuy from './page/joinbuy/joinbuy.vue'
@@ -56,9 +63,16 @@ const routes = [
   // { path: '/home', component: Home },
 
 
-
+  //个人中心
   // { path: '/personal/index', component: Personal },
   { path: '/personal/about', component: About },
+
+  //活动
+  { path: '/activity/detail', component : ActivityDetail},
+
+  //通知
+  { path: '/notice/index', component : Notice} ,
+  { path: '/notice/detail', component : NoticeDetail},
 
 
 
@@ -69,8 +83,8 @@ const routes = [
 
   //彩票
   { path: '/lottery/index', component: Lottery },
-  { path: '/Lottery/luckfive', component: LuckFive },
-  { path: '/Lottery/joinbuysetting', component: JoinBuySetting }
+  { path: '/lottery/luckfive', component: LuckFive },
+  { path: '/lottery/joinbuysetting', component: JoinBuySetting }
 
 ]
 

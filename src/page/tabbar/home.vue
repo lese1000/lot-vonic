@@ -71,7 +71,7 @@
             $router.forward('/lottery/index');
             break;
           case 2:
-
+            $router.forward('/notice/index');
             break;
           case 3:
 

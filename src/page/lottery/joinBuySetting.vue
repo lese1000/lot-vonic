@@ -58,7 +58,7 @@
           <accordion-item title="可选设置" content-height="150">
             <von-input type="text" v-model="propaganda.title" placeholder="标题" label="合买标题" ></von-input>
             <von-input type="text" v-model="propaganda.content" placeholder="合买描述" label="合买描述" ></von-input>
-            <von-input type="text" v-model="propaganda.users" placeholder="格式是：张三,李四,王五" label="合买对象" ></von-input>
+            <von-input type="text" v-model="propaganda.players" placeholder="格式：张三,李四,王五" label="合买对象" ></von-input>
           </accordion-item>
         </accordion>
       </div>
@@ -107,7 +107,7 @@
         {
           title:'合买必中！',
           content:'买彩票讲的是缘分和坚持。',
-          users: ''
+          players: ''
         }
 
 
