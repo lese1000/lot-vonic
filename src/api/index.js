@@ -3,7 +3,8 @@ var root = '/api/v1/'
 // 引用axios
 // var axios = require('axios') // commonjs格式
 import axios from 'axios' // ES6写法
-import qs from 'qa'
+//用于解决 axios Post提交表单数据问题（qs.stringify(params) 类似jquery 的 $(from).serilize()）
+import qs from 'qs'
 
 /**
 说明：
