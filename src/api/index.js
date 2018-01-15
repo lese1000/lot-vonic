@@ -3,6 +3,7 @@ var root = '/api/v1/'
 // 引用axios
 // var axios = require('axios') // commonjs格式
 import axios from 'axios' // ES6写法
+import qs from 'qa'
 
 /**
 说明：
@@ -49,7 +50,7 @@ function apiAxios (method, url, params, success, failure) {
   axios({
     method: method,
     url: url,
-    data: method === 'POST' || method === 'PUT' ? params : null,
+    data: method === 'POST' || method === 'PUT' ? qs.stringify(params) : null,
     params: method === 'GET' || method === 'DELETE' ? params : null,
     baseURL: root,
     withCredentials: false
