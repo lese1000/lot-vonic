@@ -1,6 +1,6 @@
 <template lang="html">
-  <div class="page has-navbar has-tabbar" v-nav="{ title: '最新活动'}" v-tabbar-menu-index="1">
-    <div class="page-content text-center">
+  <div class="page has-navbar" v-nav="{ title: '系统公告',showBackButton: true, onBackButtonClick: back }" >
+    <div class="page-content ">
       <list class=" hl-list-borderless">
         <item class=" item-icon-right" @click.native="$router.forward('/notice/detail')">
           关于充值账号变更通知
@@ -18,6 +18,11 @@
 
 <script>
 export default {
+  methods:{
+    back() {
+      $router.back('/index/home')
+    }
+  }
 }
 </script>
 

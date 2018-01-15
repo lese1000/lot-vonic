@@ -44,7 +44,7 @@
          '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_lottery.png"/><br><span>天天彩票</span></div>',
          '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_notice.png"/><br><span>系统公告</span></div>',
          '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_recharge.png"/><br><span>充值中心</span></div>',
-         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_cash.png"/><br><span>我要提现</span></div>',
+         '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_cash.png"/><br><span>在线取款</span></div>',
          '<div class="entrance default-font-color"><img class="nav-img" src="static/image/home/home_history.png"/><br><span>历史投注</span></div>'
 
 
@@ -74,10 +74,10 @@
             $router.forward('/notice/index');
             break;
           case 3:
-
+            $router.forward('/account/recharge/index');
             break;
           case 4:
-
+            $router.forward('/account/cash/index');
             break;
           case 5:
 

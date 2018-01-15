@@ -3,7 +3,7 @@
     <div class="page-content">
 
       <list class="list-ios hl-list-borderless">
-        <item class=" item-icon-right" @click.native="$router.forward('/basic/button')">
+        <item class=" item-icon-right" @click.native="$router.forward('/personal/changepassword')">
           登录密码
           <span class="item-note">修改</span>
           <i class="icon ion-ios-arrow-right"></i>
@@ -16,7 +16,7 @@
           在线客服 <span class="item-note">发起聊天</span>
           <i class="icon ion-ios-arrow-right"></i>
         </item>
-        <item class="item-icon-right" @click.native="$router.forward('/basic/search')">
+        <item class="item-icon-right" @click.native="$router.forward('/personal/about')">
           关于 <span class="item-note">详情</span>
           <i class="icon ion-ios-arrow-right"></i>
         </item>

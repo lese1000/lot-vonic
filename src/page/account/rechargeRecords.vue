@@ -1,5 +1,5 @@
 <template lang="html">
-  <div class="page has-navbar" v-nav="{ title: '公告详情',showBackButton: true, onBackButtonClick: back }">
+  <div class="page has-navbar " v-nav="{ title: '充值记录',showBackButton: true, onBackButtonClick: back }" >
     <div class="page-content text-center">
       <h2 class="padding">Nothing here.</h2>
     </div>
@@ -10,7 +10,7 @@
 export default {
   methods:{
     back() {
-      $router.back('/notice/index')
+      $router.back('/account/cash/index')
     }
   }
 }

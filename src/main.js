@@ -23,6 +23,7 @@ import Personal from './page/tabbar/personal.vue'
 
 // 个人中心
 import About from './page/personal/about.vue'
+import ChangePassword from './page/personal/changePassword.vue'
 
 // 活动
 import ActivityDetail from './page/activity/detail.vue'
@@ -30,6 +31,14 @@ import ActivityDetail from './page/activity/detail.vue'
 //通知
 import Notice from './page/notice/notice.vue'
 import NoticeDetail from './page/notice/noticeDetail.vue'
+
+// 充值提现
+import Recharge from './page/account/recharge.vue'
+import RechargeDetail from './page/account/rechargeDetail.vue'
+import RechargeRecords from './page/account/rechargeRecords.vue'
+import Cash from './page/account/cash.vue'
+import CashDetail from './page/account/cashDetail.vue'
+import CashRecords from './page/account/cashRecords.vue'
 
 
 //合买模块
@@ -66,6 +75,7 @@ const routes = [
   //个人中心
   // { path: '/personal/index', component: Personal },
   { path: '/personal/about', component: About },
+  { path: '/personal/changepassword', component: ChangePassword },
 
   //活动
   { path: '/activity/detail', component : ActivityDetail},
@@ -73,6 +83,14 @@ const routes = [
   //通知
   { path: '/notice/index', component : Notice} ,
   { path: '/notice/detail', component : NoticeDetail},
+
+  // 充值，提现/account/recharge/detail
+  { path: '/account/recharge/index', component : Recharge},
+  { path: '/account/recharge/detail', component : RechargeDetail},
+  { path: '/account/recharge/records', component : RechargeRecords},
+  { path: '/account/cash/index', component : Cash},
+  { path: '/account/cash/detail', component : CashDetail},
+  { path: '/account/cash/records', component : CashRecords},
 
 
 
@@ -85,6 +103,8 @@ const routes = [
   { path: '/lottery/index', component: Lottery },
   { path: '/lottery/luckfive', component: LuckFive },
   { path: '/lottery/joinbuysetting', component: JoinBuySetting }
+
+
 
 ]
 
