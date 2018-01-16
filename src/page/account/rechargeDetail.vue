@@ -59,7 +59,7 @@
     methods: {
 
       back() {
-        $router.back('/recharge/index')
+        $router.back('/account/recharge/index')
       }
     }
   }

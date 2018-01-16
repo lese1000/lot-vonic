@@ -10,7 +10,7 @@
 export default {
   methods:{
     back() {
-      $router.back('/account/cash/index')
+      $router.back('/account/recharge/index')
     }
   }
 }

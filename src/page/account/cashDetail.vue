@@ -53,7 +53,7 @@
     methods: {
 
       back() {
-        $router.back('/cash/index')
+        $router.back('/account/cash/index')
       }
     }
   }
