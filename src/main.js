@@ -40,6 +40,9 @@ import Cash from './page/account/Cash.vue'
 import CashDetail from './page/account/CashDetail.vue'
 import CashRecords from './page/account/CashRecords.vue'
 
+ // 历史投注
+ import BuyHistory from './page/history/BuyHistory.vue'
+
 
 //合买模块
 import JoinBuy from './page/joinbuy/Joinbuy.vue'
@@ -83,6 +86,8 @@ const routes = [
   //通知
   { path: '/notice/index', component : Notice} ,
   { path: '/notice/detail', component : NoticeDetail},
+  //历史投注
+  { path: '/history/index',component : BuyHistory},
 
   // 充值，提现/account/recharge/detail
   { path: '/account/recharge/index', component : Recharge},

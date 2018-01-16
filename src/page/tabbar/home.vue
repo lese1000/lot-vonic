@@ -80,7 +80,7 @@
             $router.forward('/account/cash/index');
             break;
           case 5:
-
+          $router.forward('/history/index');
             break;
           default:
 
