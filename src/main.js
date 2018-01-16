@@ -10,46 +10,46 @@ require('../static/css/sm.css')// require方式
 import '../static/js/zepto.min.js';
 
 // Page Components
-import Login from './page/login.vue'
-import Reg from './page/reg.vue'
+import Login from './page/Login.vue'
+import Reg from './page/Reg.vue'
 
 
 
 //tabbar
-import Index from './page/index.vue'
-import Activity from './page/tabbar/activity.vue'
-import Home from './page/tabbar/home.vue'
-import Personal from './page/tabbar/personal.vue'
+import Index from './page/Index.vue'
+import Activity from './page/tabbar/Activity.vue'
+import Home from './page/tabbar/Home.vue'
+import Personal from './page/tabbar/Personal.vue'
 
 // 个人中心
-import About from './page/personal/about.vue'
-import ChangePassword from './page/personal/changePassword.vue'
+import About from './page/personal/About.vue'
+import ChangePassword from './page/personal/ChangePassword.vue'
 
 // 活动
-import ActivityDetail from './page/activity/detail.vue'
+import ActivityDetail from './page/activity/ActivityDetail.vue'
 
 //通知
-import Notice from './page/notice/notice.vue'
-import NoticeDetail from './page/notice/noticeDetail.vue'
+import Notice from './page/notice/Notice.vue'
+import NoticeDetail from './page/notice/NoticeDetail.vue'
 
 // 充值提现
-import Recharge from './page/account/recharge.vue'
-import RechargeDetail from './page/account/rechargeDetail.vue'
-import RechargeRecords from './page/account/rechargeRecords.vue'
-import Cash from './page/account/cash.vue'
-import CashDetail from './page/account/cashDetail.vue'
-import CashRecords from './page/account/cashRecords.vue'
+import Recharge from './page/account/Recharge.vue'
+import RechargeDetail from './page/account/RechargeDetail.vue'
+import RechargeRecords from './page/account/RechargeRecords.vue'
+import Cash from './page/account/Cash.vue'
+import CashDetail from './page/account/CashDetail.vue'
+import CashRecords from './page/account/CashRecords.vue'
 
 
 //合买模块
-import JoinBuy from './page/joinbuy/joinbuy.vue'
-import DoBuy from './page/joinbuy/doBuy.vue'
-import JoinBuyDetail from './page/joinbuy/detail.vue'
+import JoinBuy from './page/joinbuy/Joinbuy.vue'
+import DoBuy from './page/joinbuy/DoBuy.vue'
+import JoinBuyDetail from './page/joinbuy/JoinBuyDetail.vue'
 
 // 彩票模块
-import Lottery from './page/lottery/lottery.vue'
-import LuckFive from './page/lottery/lotteryLuckFive.vue'
-import JoinBuySetting from './page/lottery/joinBuySetting.vue'
+import Lottery from './page/lottery/Lottery.vue'
+import LuckFive from './page/lottery/LotteryLuckFive.vue'
+import JoinBuySetting from './page/lottery/JoinBuySetting.vue'
 
 
 Vue.prototype.$api = api;
