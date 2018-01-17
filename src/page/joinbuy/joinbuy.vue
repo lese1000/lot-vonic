@@ -14,26 +14,74 @@
                   <div class="card-content">
                     <div class="card-content-inner">
                       <div style="text-align:left;padding-bottom:5px;">
-                          <span style="color:red;">投注号码：</span><span>0,1,2,3,4,5</span><span style="float:right;color:red;background-color:#e1dcdc;border-radius:5px;padding:0 3px;">未开奖</span>
+                          <span style="color:red;">投注内容：<span class="positive">点击查看</span></span><span style="float:right;color:red;background-color:#e1dcdc;border-radius:5px;padding:0 3px;">未开奖</span>
+                      </div>
+                      <div style="width:100%;border:1px solid #a59f9f;overflow:scroll;color:gray;">
+                          <table class="selected-num">
+                            <tr>
+                              <td>0,1,2,3</td>
+                              <td>10 注</td>
+                              <td>10 倍</td>
+                              <td>20000元</td>
+
+                            </tr>
+                            <tr>
+                              <td>0,1,2,</td>
+                              <td>10 注</td>
+                              <td>10 倍</td>
+                              <td>20000元</td>
+
+                            </tr>
+                            <tr>
+                              <td>0,1,2,3,4,5,6,7,8,9</td>
+                              <td>10 注</td>
+                              <td>10 倍</td>
+                              <td>20000元</td>
+
+                            </tr>
+                            <tr>
+                              <td>0,1,2,3,4,5,6,7,8,9</td>
+                              <td>10 注</td>
+                              <td>10 倍</td>
+                              <td>20000元</td>
+
+                            </tr>
+                            <tr>
+                              <td>0,1,2,3,4,5,6,7,8,9</td>
+                              <td>10 注</td>
+                              <td>10 倍</td>
+                              <td>20000元</td>
+
+                            </tr>
+                            <tr>
+                              <td>0,1,2,3,4,5,6,7,8,9</td>
+                              <td>10 注</td>
+                              <td>10 倍</td>
+                              <td>20000元</td>
+
+                            </tr>
+
+                          </table>
                       </div>
 
+                    <div style="width:100%;height:50px;border:1px solid #a59f9f;overflow:scroll;color:gray;margin-top:5px;">
                       <table class="gridtable" style="margin-top:5px;">
                         <tr>
-                          <td style="width:26%">方案金额</td>
+                          <td style="width:26%;padding-left:5px;">方案金额</td>
                           <td style="width:19%">总额份数</td>
                           <td style="width:19%">剩余份数</td>
                           <td style="width:19%">保底份数</td>
                           <td style="width:17%">方案进度</td>
                         </tr>
                         <tr>
-                          <td>1000000元</td>
-                          <td>1000000</td>
-                          <td>50000</td>
-                          <td>500份</td>
+                          <td style="width:26%;padding-left:5px;">1000元</td>
+                          <td>100</td>
+                          <td>5</td>
+                          <td>50份</td>
                           <td>150%</td>
                         </tr>
                       </table>
-
+                    </div>
                     </div>
                   </div>
                   <div class="card-footer">发起人：李四<button class="button button-assertive button-small" style="float:right" @click="onJoinBuy(index)">参与合买</button></div>

@@ -33,11 +33,8 @@
 <script>
   export default {
     methods: {
-      back() {
-        $router.back('/')
-      },
       loginout(){
-
+        $router.back('/')
       }
     }
   }
