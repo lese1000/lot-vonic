@@ -3,6 +3,23 @@
     <div class="page-content">
 
       <list class="list-ios hl-list-borderless">
+        <!-- <item class=" item-icon-right" @click.native="$router.forward('/personal/changepassword')">
+          可用余额:<i style="color:red">￥1234567890</i>
+          <span class="item-note">明细</span>
+          <i class="icon ion-ios-arrow-right"></i>
+        </item> -->
+        <item>
+          <!-- style="margin:0 auto;width:80%;padding:5px 0;color:white;border-radius:5px;" class="bg-blue" -->
+          <div class="button   button-positive" style="width:100%;">
+            <div style="text-align:center;">
+                余额
+            </div>
+            <div style="text-align:center;margin-top:-20px;">
+              ￥12345678.00
+            </div>
+          </div>
+
+        </item>
         <item class=" item-icon-right" @click.native="$router.forward('/personal/changepassword')">
           登录密码
           <span class="item-note">修改</span>

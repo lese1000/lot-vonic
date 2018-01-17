@@ -52,8 +52,15 @@
           <button class=" button button-normal button-positive" style="float:right;" @click="oneBetting">一键投注</button>
       </item>
       <item>
-          <div style="width:100%;height:110px;border:1px solid #a59f9f;overflow:scroll;color:gray">
+          <div style="width:100%;min-height:100px;border:1px solid #a59f9f;overflow:scroll;color:gray">
               <table class="selected-num">
+                <tr>
+                  <td>号码</td>
+                  <td>注数</td>
+                  <td>倍率</td>
+                  <td>金额</td>
+                  <td></td>
+                </tr>
                 <tr>
                   <td>0,1,2,3</td>
                   <td>10 注</td>
@@ -63,6 +70,34 @@
                 </tr>
                 <tr>
                   <td>0,1,2,</td>
+                  <td>10 注</td>
+                  <td>10 倍</td>
+                  <td>20000元</td>
+                  <td><i class="icon ion-trash-a"></i></td>
+                </tr>
+                <tr>
+                  <td>0,1,2,3,4,5,6,7,8,9</td>
+                  <td>10 注</td>
+                  <td>10 倍</td>
+                  <td>20000元</td>
+                  <td><i class="icon ion-trash-a"></i></td>
+                </tr>
+                <tr>
+                  <td>0,1,2,3,4,5,6,7,8,9</td>
+                  <td>10 注</td>
+                  <td>10 倍</td>
+                  <td>20000元</td>
+                  <td><i class="icon ion-trash-a"></i></td>
+                </tr>
+                <tr>
+                  <td>0,1,2,3,4,5,6,7,8,9</td>
+                  <td>10 注</td>
+                  <td>10 倍</td>
+                  <td>20000元</td>
+                  <td><i class="icon ion-trash-a"></i></td>
+                </tr>
+                <tr>
+                  <td>0,1,2,3,4,5,6,7,8,9</td>
                   <td>10 注</td>
                   <td>10 倍</td>
                   <td>20000元</td>
@@ -272,6 +307,7 @@ import Vue from 'vue'
       margin-top: 0.2rem;
   }
   table.selected-num{
+    text-align: center;
     width: 100%;
   }
   table.selected-num > tr {

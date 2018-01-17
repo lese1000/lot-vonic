@@ -14,7 +14,7 @@
                   <div class="card-content">
                     <div class="card-content-inner">
                       <div style="text-align:left;padding-bottom:5px;">
-                          <span style="color:red;">投注内容：<span class="positive">点击查看</span></span><span style="float:right;color:red;background-color:#e1dcdc;border-radius:5px;padding:0 3px;">未开奖</span>
+                          <span style="color:red;">投注内容：<span class="positive">点击查看</span></span><span class="lottery-tip bg-blue ">未开奖</span>
                       </div>
                       <div style="width:100%;border:1px solid #a59f9f;overflow:scroll;color:gray;">
                           <table class="selected-num">
@@ -181,5 +181,26 @@ width: 100%;
 background-color: #e1e1e1;
 display: block;
 transform-origin: 50% 100%;
+}
+
+.lottery-tip{
+  float:right;
+  color: white;
+  background-color: #4a90e2;
+  border-radius:5px;
+  padding:0 3px;
+}
+
+/* 中奖奖颜色 */
+.bg-red{
+  background-color: red;
+}
+/* 未中奖颜色 */
+.bg-gray{
+  background-color:#e1dcdc;
+}
+/* 默认未开奖颜色 */
+.bg-blue{
+  background-color: #4a90e2;
 }
 </style>
