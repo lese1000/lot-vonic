@@ -4,10 +4,10 @@ import api from './api/index.js'
 import util from './utils/index.js'
 
 // 引入静态资源
-// import '../static/css/sm.css'//import方式
-require('../static/css/sm.css')// require方式
+import '../static/css/sm.css'//import方式
+// require('../static/css/sm.css')// require方式
 // require('../static/css/style.css')
-import '../static/js/zepto.min.js';
+// import '../static/js/zepto.min.js';
 
 // Page Components
 import Login from './page/Login.vue'
