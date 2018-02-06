@@ -5,13 +5,67 @@ var root = '/api/v1/'
 import axios from 'axios' // ES6写法
 //用于解决 axios Post提交表单数据问题（qs.stringify(params) 类似jquery 的 $(from).serilize()）
 import qs from 'qs'
-
+import {checkCookie} from '../utils/cookie-util'
 /**
 说明：
 import list from './list';//ES6格式
 //等价于
 var list = require('./list'); //commonjs格式:经典的commonjs同步语法
 **/
+
+
+
+// axios 配置
+// axios.defaults.timeout = 5000;
+// axios.defaults.baseURL = 'https://api.github.com';
+
+// http request 拦截器
+axios.interceptors.request.use(
+    config => {
+        //弹出加载框
+
+        //可在此进行权限鉴定
+        // if (store.state.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
+        //     config.headers.Authorization = `token ${store.state.token}`;
+        // }
+        return config;
+    },
+    error => {
+        //关闭加载框
+
+        return Promise.reject(error);
+    });
+
+// http response 拦截器
+axios.interceptors.response.use(
+    response => {
+        //关闭加载框
+
+        return response;
+    },
+    error => {
+        //关闭加载框
+
+        if (error) {
+            switch (error.code) {
+                case 401:
+                    // 401 清除token信息并跳转到登录页面
+                    router.replace({
+                        path: '/',
+                        query: {redirect: router.currentRoute.fullPath}
+                    })
+            }
+        }
+        // console.log(JSON.stringify(error));//console : Error: Request failed with status code 402
+        return Promise.reject(error)
+});
+
+
+
+
+
+
+
 
 
 // 自定义判断元素类型JS

@@ -1,6 +1,6 @@
 
 
-function clearCookies(){//删除所有cookies
+export function clearCookies(){//删除所有cookies
 	var cookies = document.cookie.split(";");
 	for ( var i = 0; i < cookies.length; i++) {
 		var exp = new Date();
@@ -14,7 +14,7 @@ function clearCookies(){//删除所有cookies
 	}
 }
 
-function delCookie(name) {//删除cookies
+export function delCookie(name) {//删除cookies
 	var exp = new Date();
 	exp.setTime(exp.getTime() - 1);
 	var cval = getCookie(name);
@@ -22,7 +22,8 @@ function delCookie(name) {//删除cookies
 		document.cookie = name + "=" + cval + ";expires="
 				+ exp.toGMTString();
 }
-function getCookie(c_name) {//获取cookie
+
+export function getCookie(c_name) {//获取cookie
 	if (document.cookie.length > 0) {
 		c_start = document.cookie.indexOf(c_name + "=");
 		if (c_start != -1) {
@@ -37,7 +38,7 @@ function getCookie(c_name) {//获取cookie
 	return ""
 }
 
-function setCookie(c_name, value, expiredays) {//设置cookie
+export function setCookie(c_name, value, expiredays) {//设置cookie
 	var exdate = new Date();
 	exdate.setDate(exdate.getDate() + expiredays);
 	document.cookie = c_name
@@ -47,7 +48,7 @@ function setCookie(c_name, value, expiredays) {//设置cookie
 					+ exdate.toGMTString());
 }
 
-function checkCookie(name) {//检测cookie是否存在
+export function checkCookie(name) {//检测cookie是否存在
 	var username = getCookie(name);
 	if (username != null && username != "") {
 		alert('Welcome again ' + username + '!');
@@ -59,10 +60,10 @@ function checkCookie(name) {//检测cookie是否存在
 	}
 }
 
-export default {
-  clearCookies:clearCookies,
-  delCookie:delCookie,
-  getCookie:getCookie,
-  setCookie:setCookie,
-  checkCookie:checkCookie
-}
+// export default {
+//   clearCookies:clearCookies,
+//   delCookie:delCookie,
+//   getCookie:getCookie,
+//   setCookie:setCookie,
+//   checkCookie:checkCookie
+// }
