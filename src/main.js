@@ -3,6 +3,7 @@ import Vonic from 'vonic'
 import api from './api/index.js'
 import util from './utils/index.js'
 import {checkCookie} from '../util/cookie-util.js'
+import router from 'router'
 
 // 引入静态资源
 import '../static/css/sm.css'//import方式
