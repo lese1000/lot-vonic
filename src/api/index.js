@@ -1,5 +1,5 @@
 // 配置API接口地址
-var root = '/api/v1/'
+var baseURL = '/api/v1/'
 // 引用axios
 // var axios = require('axios') // commonjs格式
 import axios from 'axios' // ES6写法
@@ -23,17 +23,20 @@ var list = require('./list'); //commonjs格式:经典的commonjs同步语法
 axios.interceptors.request.use(
     config => {
         //弹出加载框
-
+        $loading.show('加载中...')
         //可在此进行权限鉴定
         // if (store.state.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
         //     config.headers.Authorization = `token ${store.state.token}`;
         // }
-        console.log(">>>>>>>>>>>>>");
+        if (config.method == "POST"){
+            config.data = qs.stringify(config.data);
+            config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+        }
         return config;
     },
     error => {
         //关闭加载框
-
+        $loading.hide()
         return Promise.reject(error);
     });
 
@@ -41,12 +44,12 @@ axios.interceptors.request.use(
 axios.interceptors.response.use(
     response => {
         //关闭加载框
-
+        $loading.hide()
         return response;
     },
     error => {
         //关闭加载框
-
+        $loading.hide()
         if (error) {
             switch (error.code) {
                 case 401:
@@ -60,7 +63,6 @@ axios.interceptors.response.use(
         // console.log(JSON.stringify(error));//console : Error: Request failed with status code 402
         return Promise.reject(error)
 });
-
 
 
 
@@ -106,9 +108,10 @@ function apiAxios (method, url, params, success, failure) {
   axios({
     method: method,
     url: url,
-    data: method === 'POST' || method === 'PUT' ? qs.stringify(params) : null,
+    data: method === 'POST' || method === 'PUT' ? params : null,
+    // data: method === 'POST' || method === 'PUT' ? qs.stringify(params) : null,
     params: method === 'GET' || method === 'DELETE' ? params : null,
-    baseURL: root,
+    baseURL: baseURL,
     withCredentials: false
   })
   .then(function (res) {
@@ -120,17 +123,34 @@ function apiAxios (method, url, params, success, failure) {
       if (failure) {
         failure(res.data)
       } else {
-        window.alert('error: ' + JSON.stringify(res.data))
+
+        //window.alert('error: ' + JSON.stringify(res.data))
+        /* Confirm 确认框 */
+        $dialog.alert({
+          theme: 'ios',
+          title: res.data.message,
+          okText: '好'
+        }).then(() => {
+          console.log('alert hide.')
+        })
       }
     }
   })
   .catch(function (err) {
     let res = err.response
     if (err) {
-      window.alert('api error, HTTP CODE: ' + res.status)
+      // window.alert('api error, HTTP CODE: ' + res.status)
+      $dialog.alert({
+        theme: 'ios',
+        title: 'api error, HTTP CODE: ' + res.status,
+        okText: '好'
+      }).then(() => {
+        console.log('alert hide.')
+      })
     }
   })
 }
+
 
 // 返回在vue模板中的调用接口
 export default {
