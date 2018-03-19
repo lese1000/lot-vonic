@@ -53,6 +53,10 @@
       // this.$api.get('topics', null, r => {
       //   console.log(r.data);
       // })
+      /* 显示一个文字提示，3秒后关闭 */
+    // $toast.show('这是一个提示', 3000).then(() => {
+    //   console.log('toast hide')
+    // })
     }
 
   }

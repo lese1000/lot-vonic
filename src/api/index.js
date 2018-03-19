@@ -28,6 +28,8 @@ axios.interceptors.request.use(
         // if (store.state.token) {  // 判断是否存在token，如果存在的话，则每个http header都加上token
         //     config.headers.Authorization = `token ${store.state.token}`;
         // }
+
+        //设置post方法以表单方式提交
         if (config.method == "POST"){
             config.data = qs.stringify(config.data);
             config.headers['Content-Type'] = 'application/x-www-form-urlencoded';

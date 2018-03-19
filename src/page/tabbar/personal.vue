@@ -48,10 +48,40 @@
   </div>
 </template>
 <script>
+import {checkCookie,delCookie} from '../../utils/cookie-util'
   export default {
     methods: {
       loginout(){
-        $router.back('/')
+        $dialog.confirm({
+          // 设置为ios样式
+          theme: 'ios',
+          // 标题
+          title: '确认退出?',
+          // 取消按钮文本
+          cancelText: '取消',
+          // 确定按钮文本
+          okText: '确认'
+        }).then((res) => {
+          if(res){
+            this.$api.post('auth/logout',{},data => {
+              $dialog.alert({
+                theme: 'ios',
+                title: '退出成功',
+                okText: '好'
+              }).then(() => {
+                delCookie('playerId');
+                $router.back('/')
+              })
+              // $toast.show('退出成功', 3000).then(() => {
+              //   delCookie('playerId');
+              //   $router.back('/')
+              // })
+            })
+
+          }
+        })
+
+
       }
     }
   }

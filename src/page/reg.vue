@@ -15,6 +15,7 @@
   </div>
 </template>
 <script>
+  import {getCookie} from '../utils/cookie-util'
   export default{
     data() {
       return {
@@ -25,13 +26,20 @@
     },
     methods:{
       doLogin() {
-        console.log('do reg ....'+this.playerName);
+        console.log('do reg p:'+getCookie('p'));
         let param = {
           playerName:this.playerName,
-          password:this.password
+          password:this.password,
+          p : getCookie('p')
         }
         this.$api.post('auth/reg',param,data => {
+          $dialog.alert({
+            theme: 'ios',
+            title: '注册成功',
+            okText: '好'
+          }).then(() => {
             $router.forward('/index/home')
+          })
         })
 
       }
@@ -40,6 +48,8 @@
       // this.$api.get('topics', null, r => {
       //   console.log(r.data);
       // })
+      console.log('>>> p:'+getCookie('p'));
+
     }
 
   }

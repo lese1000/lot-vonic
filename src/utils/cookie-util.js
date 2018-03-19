@@ -25,10 +25,10 @@ export function delCookie(name) {//删除cookies
 
 export function getCookie(c_name) {//获取cookie
 	if (document.cookie.length > 0) {
-		c_start = document.cookie.indexOf(c_name + "=");
+		var c_start = document.cookie.indexOf(c_name + "=");
 		if (c_start != -1) {
 			c_start = c_start + c_name.length + 1;
-			c_end = document.cookie.indexOf(";", c_start);
+			var c_end = document.cookie.indexOf(";", c_start);
 			if (c_end == -1) {
 				c_end = document.cookie.length
 			}
@@ -48,15 +48,12 @@ export function setCookie(c_name, value, expiredays) {//设置cookie
 					+ exdate.toGMTString());
 }
 
-export function checkCookie(name) {//检测cookie是否存在
-	var username = getCookie(name);
-	if (username != null && username != "") {
-		alert('Welcome again ' + username + '!');
+export function checkCookie(c_name) {//检测cookie是否存在
+	var _value = getCookie(c_name);
+	if (_value != null && _value != '' && _value != 'undefined') {
+		return true;
 	} else {
-		username = prompt('Please enter your name:', "");
-		if (username != null && username != "") {
-			setCookie('username', username, 365);
-		}
+		return false;
 	}
 }
 

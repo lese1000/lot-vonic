@@ -10,6 +10,8 @@ import '../static/css/sm.css'//import方式
 // require('../static/css/style.css')
 // import '../static/js/zepto.min.js';
 
+import {checkCookie} from './utils/cookie-util'
+
 // Page Components
 import Login from './page/Login.vue'
 import Reg from './page/Reg.vue'
@@ -91,7 +93,7 @@ const routes = [
   { path: '/notice/index', component : Notice} ,
   { path: '/notice/detail', component : NoticeDetail},
   //历史投注
-  { path: '/history/index',component : BuyHistory},
+  { path: '/history/index',component : BuyHistory,meta:{requireAuth:true}},
 
   // 充值，提现/account/recharge/detail
   { path: '/account/recharge/index', component : Recharge},
@@ -104,14 +106,14 @@ const routes = [
 
 
   //合买
-  { path: '/joinbuy/index', component: JoinBuy },
-  { path: '/joinbuy/dobuy', component: DoBuy },
-  { path: '/joinbuy/detail', component: JoinBuyDetail },
+  { path: '/joinbuy/index', component: JoinBuy ,meta:{requireAuth:true}},
+  { path: '/joinbuy/dobuy', component: DoBuy ,meta:{requireAuth:true}},
+  { path: '/joinbuy/detail', component: JoinBuyDetail ,meta:{requireAuth:true}},
 
   //彩票
-  { path: '/lottery/index', component: Lottery },
-  { path: '/lottery/luckfive', component: LuckFive },
-  { path: '/lottery/joinbuysetting', component: JoinBuySetting }
+  { path: '/lottery/index', component: Lottery ,meta:{requireAuth:true}},
+  { path: '/lottery/luckfive', component: LuckFive ,meta:{requireAuth:true}},
+  { path: '/lottery/joinbuysetting', component: JoinBuySetting ,meta:{requireAuth:true}}
 
 
 
@@ -124,4 +126,30 @@ const routes = [
 
 Vue.use(Vonic.app, {
   routes: routes
+})
+
+
+//登陆鉴权判断
+$router.beforeEach((to, from, next) => {
+  if (to.matched.some(record => record.meta.requireAuth)) {
+    // this route requires auth, check if logged in
+    // if not, redirect to login page.
+    if (! checkCookie('playerId')) {
+      $dialog.alert({
+        theme: 'ios',
+        title: '请先登陆',
+        okText: '好'
+      }).then(() => {
+        next({
+          path: '/',
+          query: { redirect: to.fullPath }
+        })
+      })
+
+    } else {
+      next()
+    }
+  } else {
+    next() // 确保一定要调用 next()
+  }
 })
