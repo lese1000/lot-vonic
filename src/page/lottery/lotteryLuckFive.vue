@@ -1,6 +1,13 @@
 <template>
-  <div class="page has-navbar" v-nav="{ title: '幸运五分彩', showBackButton: true, onBackButtonClick: back }">
+  <div class="page has-navbar" v-nav="{
+      title: '幸运五分彩：前三组选',
+      showBackButton: true,
+      onBackButtonClick: back,
+      showMenuButton: true,
+      onMenuButtonClick: toggleSidebar
+    }">
     <div class="page-content">
+
       <div class="card">
         <div class="card-header"> <span>第 20180111125 期</span><span style="color:#4a90e2">玩法说明</span> </div>
         <div class="card-content">
@@ -12,7 +19,6 @@
       </div>
 
       <item>
-          <div class="circle-box" :class="{'circle-box-selected':selectedBox[0]}" @click="clickBox(0)">0</div>
           <div class="circle-box" :class="{'circle-box-selected':selectedBox[1]}" @click="clickBox(1)">1</div>
           <div class="circle-box" :class="{'circle-box-selected':selectedBox[2]}" @click="clickBox(2)">2</div>
           <div class="circle-box" :class="{'circle-box-selected':selectedBox[3]}" @click="clickBox(3)">3</div>
@@ -22,6 +28,8 @@
           <div class="circle-box" :class="{'circle-box-selected':selectedBox[7]}" @click="clickBox(7)">7</div>
           <div class="circle-box" :class="{'circle-box-selected':selectedBox[8]}" @click="clickBox(8)">8</div>
           <div class="circle-box" :class="{'circle-box-selected':selectedBox[9]}" @click="clickBox(9)">9</div>
+          <div class="circle-box" :class="{'circle-box-selected':selectedBox[10]}" @click="clickBox(10)">10</div>
+          <div class="circle-box" :class="{'circle-box-selected':selectedBox[11]}" @click="clickBox(11)">11</div>
       </item>
       <item>
           <button class="circle-box-btn button button-small button-royal" @click="selectBig">大</button>
@@ -34,11 +42,11 @@
       </item>
       <item>
         <div style="font-size:14px;float:left;line-height:35px;margin-right:10px;">
-          共 1000 注，共 400000 元
+          共 <b>{{bettingInfo.bettingCount}}</b> 注，共 <b>{{bettingInfo.currentMoney}}</b> 元
         </div>
         <div class="gw_num" style="width:130px;height:2rem;">
           <em @click="doSub()">-</em>
-          <input type="number"  v-model="counter" class="num" style="width:60px;"/>
+          <input type="number"  v-model="rateCount" class="num" style="width:60px;"/>
           <em class="add" @click="doAdd()">+</em>
         </div>
         <div style="font-size:14px;float:left;line-height:35px;margin-left:10px;">
@@ -48,7 +56,7 @@
 
 
       <item>
-          <button class=" button button-normal button-assertive" style="float:left;" >选好了</button>
+          <button class=" button button-normal button-assertive" style="float:left;" @click="oneSelected">选好了</button>
           <button class=" button button-normal button-positive" style="float:right;" @click="oneBetting">一键投注</button>
       </item>
       <item>
@@ -61,68 +69,20 @@
                   <td>金额</td>
                   <td></td>
                 </tr>
-                <tr>
-                  <td>0,1,2,3</td>
-                  <td>10 注</td>
-                  <td>10 倍</td>
-                  <td>20000元</td>
-                  <td><i class="icon ion-trash-a"></i></td>
+                <tr v-for =  " (item, index ) in bettingInfoList">
+                  <td>{{item.selectedNum}}</td>
+                  <td>{{item.bettingCount}} 注</td>
+                  <td>{{item.rateCount}} 倍</td>
+                  <td>{{item.totalMoney}}元</td>
+                  <td><i class="icon ion-trash-a" @click="removeSelectedBetting(index)"></i></td>
                 </tr>
-                <tr>
-                  <td>0,1,2,</td>
-                  <td>10 注</td>
-                  <td>10 倍</td>
-                  <td>20000元</td>
-                  <td><i class="icon ion-trash-a"></i></td>
-                </tr>
-                <tr>
-                  <td>0,1,2,3,4,5,6,7,8,9</td>
-                  <td>10 注</td>
-                  <td>10 倍</td>
-                  <td>20000元</td>
-                  <td><i class="icon ion-trash-a"></i></td>
-                </tr>
-                <tr>
-                  <td>0,1,2,3,4,5,6,7,8,9</td>
-                  <td>10 注</td>
-                  <td>10 倍</td>
-                  <td>20000元</td>
-                  <td><i class="icon ion-trash-a"></i></td>
-                </tr>
-                <tr>
-                  <td>0,1,2,3,4,5,6,7,8,9</td>
-                  <td>10 注</td>
-                  <td>10 倍</td>
-                  <td>20000元</td>
-                  <td><i class="icon ion-trash-a"></i></td>
-                </tr>
-                <tr>
-                  <td>0,1,2,3,4,5,6,7,8,9</td>
-                  <td>10 注</td>
-                  <td>10 倍</td>
-                  <td>20000元</td>
-                  <td><i class="icon ion-trash-a"></i></td>
-                </tr>
-                <tr>
-                  <td>0,1,2,3,4,5,6,7,8,9</td>
-                  <td>10 注</td>
-                  <td>10 倍</td>
-                  <td>20000元</td>
-                  <td><i class="icon ion-trash-a"></i></td>
-                </tr>
-                <tr>
-                  <td>0,1,2,3,4,5,6,7,8,9</td>
-                  <td>10 注</td>
-                  <td>10 倍</td>
-                  <td>20000元</td>
-                  <td><i class="icon ion-trash-a"></i></td>
-                </tr>
+
 
               </table>
           </div>
       </item>
       <item>
-        <span>总注数：<b style="color:red">1000</b> 注,</span><span style="margin-left:10px;">总金额：<b style="color:red">100000</b> 元</span>
+        <span>总注数：<b style="color:red">{{totalBettingCount}}</b> 注,</span><span style="margin-left:10px;">总金额：<b style="color:red">{{totalBettingMoney}}</b> 元</span>
       </item>
       <item>
         <button @click="joinBuySetting" class=" button button-normal button-assertive" style="float:left;">发起合买</button>
@@ -135,15 +95,44 @@
 <script>
 
 import Vue from 'vue'
+import Rule from './rule.vue'
+import {getBettingInfo,getBettingInfo2} from '../../utils/lottery/11s5.js'
+
+
   export default {
     data() {
       return {
         timer:'00:00',
-        counter:1,
-        selectedBox : [false,false,false,false,false,false,false,false,false,false],
-        box1:false,
-        box: [0,1,2,3,4,5,6,7,8,9],
-        timerId:null
+        rateCount:1,
+        selectedBox : [false,false,false,false,false,false,false,false,false,false,false],
+        bettingInfo: {
+          selectedNum : '',
+          bettingCount : 0,
+          totalMoney : 0,
+          currentMoney : 0
+
+        },
+        totalBettingCount : 0,
+        totalBettingMoney : 0,
+        bettingInfoList:[],
+
+        timerId:null,
+        ruleList:[
+          {'id' : 1, ruleName : '任选二'},
+          {'id' : 2, ruleName : '任选三'},
+          {'id' : 3, ruleName : '任选四'},
+          {'id' : 4, ruleName : '任选五'},
+          {'id' : 5, ruleName : '任选六'},
+          {'id' : 6, ruleName : '任选七'},
+          {'id' : 7, ruleName : '任选八'},
+          {'id' : 8, ruleName : '前二组选'},
+          {'id' : 9, ruleName : '前三组选'},
+          {'id' : 10, ruleName : '前一'}
+        ],
+        sidebar:undefined,
+        selectedRuleId:9,
+        singlePrice:2
+
       }
     },
     created() {
@@ -152,7 +141,16 @@ import Vue from 'vue'
       this.startCounter(endTime);
 
     },
+    mounted() {
+      let template = Rule.template;
+
+
+      this.sidebar = $sidebar.fromTemplate(template, {position: 'left'})
+    },
     methods: {
+      toggleSidebar() {
+        this.sidebar.toggle()
+      },
       startCounter(endTime){
         var now = new Date();
         var leftTime = new Date(endTime);
@@ -189,19 +187,17 @@ import Vue from 'vue'
         $router.back('/lottery/index')
       },
       doAdd() {
-        this.counter ++;
+        this.rateCount ++;
       },
       doSub() {
-        if(this.counter >=2){
-          this.counter --;
+        if(this.rateCount >= 2){
+          this.rateCount --;
         }
       },
       joinBuySetting() {
         $router.forward('/lottery/joinbuysetting');
       },
       clickBox(index) {
-        this.box1 = true;
-        console.log(index);
         if(this.selectedBox[index]){
           // this.selectedBox[index] = false;
           Vue.set(this.selectedBox,index,false);
@@ -209,23 +205,27 @@ import Vue from 'vue'
           // this.selectedBox[index] = true;
           Vue.set(this.selectedBox,index,true);
         }
-        console.log(this.selectedBox[index]);
+        this.bettingInfo = getBettingInfo2(this.selectedRuleId,this.selectedBox,this.singlePrice);
+
       },
       selectBig() {
         this.clearAll();
-        Vue.set(this.selectedBox,5,true);
         Vue.set(this.selectedBox,6,true);
         Vue.set(this.selectedBox,7,true);
         Vue.set(this.selectedBox,8,true);
         Vue.set(this.selectedBox,9,true);
+        Vue.set(this.selectedBox,10,true);
+        Vue.set(this.selectedBox,11,true);
+        this.bettingInfo = getBettingInfo2(this.selectedRuleId,this.selectedBox,this.singlePrice);
       },
       selectSmall() {
         this.clearAll();
-        Vue.set(this.selectedBox,0,true);
         Vue.set(this.selectedBox,1,true);
         Vue.set(this.selectedBox,2,true);
         Vue.set(this.selectedBox,3,true);
         Vue.set(this.selectedBox,4,true);
+        Vue.set(this.selectedBox,5,true);
+        this.bettingInfo = getBettingInfo2(this.selectedRuleId,this.selectedBox,this.singlePrice);
       },
       selectSingle() {
         this.clearAll();
@@ -234,24 +234,45 @@ import Vue from 'vue'
         Vue.set(this.selectedBox,5,true);
         Vue.set(this.selectedBox,7,true);
         Vue.set(this.selectedBox,9,true);
+        Vue.set(this.selectedBox,11,true);
+        this.bettingInfo = getBettingInfo2(this.selectedRuleId,this.selectedBox,this.singlePrice);
       },
       selectDouble() {
         this.clearAll();
-        Vue.set(this.selectedBox,0,true);
+        // Vue.set(this.selectedBox,0,true);
         Vue.set(this.selectedBox,2,true);
         Vue.set(this.selectedBox,4,true);
         Vue.set(this.selectedBox,6,true);
         Vue.set(this.selectedBox,8,true);
+        Vue.set(this.selectedBox,10,true);
+        this.bettingInfo = getBettingInfo2(this.selectedRuleId,this.selectedBox,this.singlePrice);
       },
       selectAll() {
-        for(var j = 0; j < 10;  j++){
+        for(var j = 1; j <= 11;  j++){
           Vue.set(this.selectedBox,j,true);
         }
+        this.bettingInfo = getBettingInfo2(this.selectedRuleId,this.selectedBox,this.singlePrice);
       },
       clearAll() {
-        for(let i = 0 ; i < 10; i++){
+        for(let i = 1 ; i <= 11; i++){
           Vue.set(this.selectedBox,i,false);
         }
+        this.rateCount = 1;
+        this.bettingInfo = getBettingInfo2(this.selectedRuleId,this.selectedBox,this.singlePrice);
+
+      },
+      oneSelected (){
+
+        this.bettingInfo = getBettingInfo(this.selectedRuleId,this.selectedBox,this.singlePrice);
+        this.bettingInfo.rateCount = this.rateCount;
+        this.bettingInfo.totalMoney = this.bettingInfo.rateCount * this.bettingInfo.currentMoney;
+        console.log(this.bettingInfo);
+        this.bettingInfoList.push(this.bettingInfo);
+        console.log(this.bettingInfoList);
+        //清除选择
+        this.clearAll();
+        //每次添加计算总投注和总金额
+        this.countTotalBettingAndMoney();
 
       },
       oneBetting() {
@@ -263,6 +284,9 @@ import Vue from 'vue'
 
         }).then((res) => {
           console.log('confirm result: ', res)
+          if(res){
+
+          }
         })
       },
       rightNowBetting() {
@@ -275,6 +299,23 @@ import Vue from 'vue'
         }).then((res) => {
           console.log('confirm result: ', res)
         })
+      },
+      removeSelectedBetting (index){
+        console.log(">>index:"+index);
+        // Vue.set(this.bettingInfoList,index,true);
+        this.bettingInfoList.splice(index,1);
+        //每次移除重新统计投注数和金额
+        this.countTotalBettingAndMoney();
+      },
+      countTotalBettingAndMoney() {
+        let tmpTotalMoney = 0;
+        let tmpTotalCount = 0;
+        this.bettingInfoList.forEach((value,index,arr) => {
+          tmpTotalMoney += value.totalMoney;
+          tmpTotalCount += value.bettingCount;
+        })
+        this.totalBettingCount = tmpTotalCount;
+        this.totalBettingMoney = tmpTotalMoney;
       }
 
 
@@ -300,7 +341,7 @@ import Vue from 'vue'
       font-size: 16px;
       margin-top: 0.2rem;
   }
-  table.selected-num{
+    table.selected-num{
     text-align: center;
     width: 100%;
   }
