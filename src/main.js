@@ -51,6 +51,7 @@ import CashRecords from './page/account/CashRecords.vue'
 import JoinBuy from './page/joinbuy/Joinbuy.vue'
 import DoBuy from './page/joinbuy/DoBuy.vue'
 import JoinBuyDetail from './page/joinbuy/JoinBuyDetail.vue'
+import BettingDetail from './page/joinbuy/bettingDetail.vue'
 
 // 彩票模块
 import Lottery from './page/lottery/Lottery.vue'
@@ -109,6 +110,7 @@ const routes = [
   { path: '/joinbuy/index', component: JoinBuy ,meta:{requireAuth:true}},
   { path: '/joinbuy/dobuy', component: DoBuy ,meta:{requireAuth:true}},
   { path: '/joinbuy/detail', component: JoinBuyDetail ,meta:{requireAuth:true}},
+  { path: '/joinbuy/bettingDetail', component: BettingDetail ,meta:{requireAuth:true}},
 
   //彩票
   { path: '/lottery/index', component: Lottery ,meta:{requireAuth:true}},

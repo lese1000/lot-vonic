@@ -4,12 +4,12 @@
       showBackButton: true,
       onBackButtonClick: back,
       showMenuButton: true,
-      onMenuButtonClick: toggleSidebar
+      onMenuButtonClick: showPlayInstructionsModal
     }">
     <div class="page-content">
 
       <div class="card">
-        <div class="card-header"> <span>第 20180111125 期</span><span style="color:#4a90e2">玩法说明</span> </div>
+        <div class="card-header"> <span>第 {{lotteryNumInfo.lotteryNum}} 期</span><span @click="showPlayInstructionsModal" style="color:#4a90e2">玩法说明</span> </div>
         <div class="card-content">
           <div class="card-content-inner">
             <div style="text-align:center;line-height:30px;height:30px;font-size:30px;color:#ff4600">{{timer}}</div>
@@ -42,11 +42,11 @@
       </item>
       <item>
         <div style="font-size:14px;float:left;line-height:35px;margin-right:10px;">
-          共 <b>{{bettingInfo.bettingCount}}</b> 注，共 <b>{{bettingInfo.currentMoney}}</b> 元
+          共 <b>{{bettingInfo.bettingAmounts}}</b> 注，共 <b>{{bettingInfo.bettingMoney}}</b> 元
         </div>
         <div class="gw_num" style="width:130px;height:2rem;">
           <em @click="doSub()">-</em>
-          <input type="number"  v-model="rateCount" class="num" style="width:60px;"/>
+          <input type="number"  v-model="rateAmounts" class="num" style="width:60px;"/>
           <em class="add" @click="doAdd()">+</em>
         </div>
         <div style="font-size:14px;float:left;line-height:35px;margin-left:10px;">
@@ -71,8 +71,8 @@
                 </tr>
                 <tr v-for =  " (item, index ) in bettingInfoList">
                   <td>{{item.selectedNum}}</td>
-                  <td>{{item.bettingCount}} 注</td>
-                  <td>{{item.rateCount}} 倍</td>
+                  <td>{{item.bettingAmounts}} 注</td>
+                  <td>{{item.rateAmounts}} 倍</td>
                   <td>{{item.totalMoney}}元</td>
                   <td><i class="icon ion-trash-a" @click="removeSelectedBetting(index)"></i></td>
                 </tr>
@@ -82,11 +82,11 @@
           </div>
       </item>
       <item>
-        <span>总注数：<b style="color:red">{{totalBettingCount}}</b> 注,</span><span style="margin-left:10px;">总金额：<b style="color:red">{{totalBettingMoney}}</b> 元</span>
+        <span>总注数：<b style="color:red">{{totalBettingAmounts}}</b> 注,</span><span style="margin-left:10px;">总金额：<b style="color:red">{{totalBettingMoney}}</b> 元</span>
       </item>
       <item>
         <button @click="joinBuySetting" class=" button button-normal button-assertive" style="float:left;">发起合买</button>
-        <button class=" button button-normal button-positive" style="float:right;" @click="rightNowBetting">立即投注</button>
+        <button @click="rightNowBetting" class=" button button-normal button-positive" style="float:right;" >立即投注</button>
       </item>
 
     </div>
@@ -95,26 +95,27 @@
 <script>
 
 import Vue from 'vue'
-import Rule from './rule.vue'
+import PlayInstructions from './playInstructions.vue'
 import {getBettingInfo,getBettingInfo2} from '../../utils/lottery/11s5.js'
+import {getCookie,setCookie,delCookie} from '../../utils/cookie-util.js'
 
 
   export default {
     data() {
       return {
         timer:'00:00',
-        rateCount:1,
+        rateAmounts:1,//倍率
         selectedBox : [false,false,false,false,false,false,false,false,false,false,false],
         bettingInfo: {
           selectedNum : '',
-          bettingCount : 0,
+          bettingAmounts : 0,
           totalMoney : 0,
-          currentMoney : 0
+          bettingMoney : 0
 
         },
-        totalBettingCount : 0,
-        totalBettingMoney : 0,
-        bettingInfoList:[],
+        totalBettingAmounts : 0,//总的投注数
+        totalBettingMoney : 0, //投注总金额
+        bettingInfoList:[], //投注号码信息列表，即bettingInfo
 
         timerId:null,
         ruleList:[
@@ -129,25 +130,70 @@ import {getBettingInfo,getBettingInfo2} from '../../utils/lottery/11s5.js'
           {'id' : 9, ruleName : '前三组选'},
           {'id' : 10, ruleName : '前一'}
         ],
-        sidebar:undefined,
-        selectedRuleId:9,
-        singlePrice:2
+        playInstructionsModal : undefined,//玩法说明模态框
+        selectedRuleId : 4, //玩法规则ID
+        selectedLotteryTypeId : 1, //彩种类型ID
+        singlePrice : 2,//单注价格
+        lotteryNumId : 1, //期号
+        lotteryNumInfo : {} ,
 
       }
     },
     created() {
-      let now = new Date();
-      let endTime = now.setTime(now.getTime() + (5*60*1000));
-      this.startCounter(endTime);
+      //获取最新期号
+      this.getNewestLotteryNum();
+      //倒计时
+      // let now = new Date();
+      // let endTime = now.setTime(now.getTime() + (5*60*1000));
+      // this.startCounter(endTime);
+
+      //合买返回时初始化原有选择的号码
+      let tmpParam = getCookie('11s5param');
+      if(tmpParam){
+        let param = JSON.parse(tmpParam);
+        this.bettingInfoList = JSON.parse(param.bettingInfoStr);
+        //统计投注数和金额
+        this.countTotalBettingAndMoney();
+      }
+
+
 
     },
+
+
     mounted() {
-      let template = Rule.template;
+      // let template = Rule.template;
 
-
-      this.sidebar = $sidebar.fromTemplate(template, {position: 'left'})
+      $modal.fromComponent(PlayInstructions, {
+        title: '玩法说明',
+        theme: 'default'
+      }).then((modal) => {
+        this.playInstructionsModal = modal
+      })
     },
+    destroyed() {
+     if (this.playInstructionsModal)
+       $modal.destroy(this.playInstructionsModal);
+   },
+
+
     methods: {
+      showPlayInstructionsModal() {
+        this.playInstructionsModal.show()
+      },
+      getNewestLotteryNum () {
+        //获取最新的期号
+        let param = {
+          lotteryTypeId : this.lotteryNumId
+        }
+        this.$api.post('lotteryNum/getNewest',param,data => {
+          this.lotteryNumInfo = data.data;
+          this.lotteryNumId = data.data.id;
+          //开始倒计时
+          this.startCounter(this.lotteryNumInfo.endTime);
+          console.log(data);
+        })
+      },
       toggleSidebar() {
         this.sidebar.toggle()
       },
@@ -165,37 +211,32 @@ import {getBettingInfo,getBettingInfo2} from '../../utils/lottery/11s5.js'
       },
       leftTimer(endTime) {
        var leftTime = (new Date(endTime)) - new Date(); //计算剩余的毫秒数
-       var days = parseInt(leftTime / 1000 / 60 / 60 / 24, 10); //计算剩余的天数
-       var hours = parseInt(leftTime / 1000 / 60 / 60 % 24, 10); //计算剩余的小时
        var minutes = parseInt(leftTime / 1000 / 60 % 60, 10);//计算剩余的分钟
        var seconds = parseInt(leftTime / 1000 % 60, 10);//计算剩余的秒数
-       days = this.checkTime(days);
-       hours = this.checkTime(hours);
        minutes = this.checkTime(minutes);
        seconds = this.checkTime(seconds);
-       if (days >= 0 || hours >= 0 || minutes >= 0 || seconds >= 0){
+       if ( minutes >= 0 || seconds >= 0){
          // document.getElementById("timer").innerHTML = days + "天" + hours + "小时" + minutes + "分" + seconds + "秒";
-         this.timer = minutes + ":" + seconds;
+         this.timer =  minutes + ":" + seconds;
        }
-       if (days <= 0 && hours <= 0 && minutes <= 0 && seconds <= 0) {
+       if (minutes <= 0 && seconds <= 0) {
          window.clearInterval(this.timerId);
          this.timerId = null;
+         this.getNewestLotteryNum();
        }
      },
 
       back() {
-        $router.back('/lottery/index')
+        $router.back('/lottery/index');
+        delCookie('11s5param')
       },
       doAdd() {
-        this.rateCount ++;
+        this.rateAmounts ++;
       },
       doSub() {
-        if(this.rateCount >= 2){
-          this.rateCount --;
+        if(this.rateAmounts >= 2){
+          this.rateAmounts --;
         }
-      },
-      joinBuySetting() {
-        $router.forward('/lottery/joinbuysetting');
       },
       clickBox(index) {
         if(this.selectedBox[index]){
@@ -257,25 +298,97 @@ import {getBettingInfo,getBettingInfo2} from '../../utils/lottery/11s5.js'
         for(let i = 1 ; i <= 11; i++){
           Vue.set(this.selectedBox,i,false);
         }
-        this.rateCount = 1;
+        this.rateAmounts = 1;
         this.bettingInfo = getBettingInfo2(this.selectedRuleId,this.selectedBox,this.singlePrice);
 
       },
       oneSelected (){
 
-        this.bettingInfo = getBettingInfo(this.selectedRuleId,this.selectedBox,this.singlePrice);
-        this.bettingInfo.rateCount = this.rateCount;
-        this.bettingInfo.totalMoney = this.bettingInfo.rateCount * this.bettingInfo.currentMoney;
-        console.log(this.bettingInfo);
-        this.bettingInfoList.push(this.bettingInfo);
-        console.log(this.bettingInfoList);
-        //清除选择
-        this.clearAll();
-        //每次添加计算总投注和总金额
-        this.countTotalBettingAndMoney();
+        let tmpBettingInfo = getBettingInfo(this.selectedRuleId,this.selectedBox,this.singlePrice);
+        if(tmpBettingInfo){
+          this.bettingInfo = tmpBettingInfo;
+          this.bettingInfo.rateAmounts = this.rateAmounts;
+          this.bettingInfo.totalMoney = this.bettingInfo.rateAmounts * this.bettingInfo.bettingMoney;
+          console.log(this.bettingInfo);
+          this.bettingInfoList.push(this.bettingInfo);
+          console.log(this.bettingInfoList);
+          //清除选择
+          this.clearAll();
+          //每次添加计算总投注和总金额
+          this.countTotalBettingAndMoney();
+        }
+
 
       },
       oneBetting() {
+
+        let tmpBettingInfo = getBettingInfo(this.selectedRuleId,this.selectedBox,this.singlePrice);
+        if(tmpBettingInfo){
+          this.bettingInfo = tmpBettingInfo;
+          this.bettingInfo.rateAmounts = this.rateAmounts;
+          this.bettingInfo.totalMoney = this.bettingInfo.rateAmounts * this.bettingInfo.bettingMoney;
+          let param = {
+              "bettingInfoStr" : JSON.stringify([this.bettingInfo]),
+              lotteryTypeId : this.selectedLotteryTypeId,
+              ruleId : this.selectedRuleId,
+              isJoinBuy : 0,
+              lotteryNumId : this.lotteryNumId
+            };
+
+
+
+          console.log(param);
+          $dialog.confirm({
+            theme: 'ios',
+            title: '确认投注?',
+            okText: '确认',
+            cancelText: '取消'
+
+          }).then((res) => {
+            console.log('confirm result: ', res)
+            if(res){
+              //清除选择
+              this.clearAll();
+              this.$api.post('betting/doBetting',param,data => {
+                //投注成功，刷新页面
+                $dialog.alert({
+                  theme: 'ios',
+                  title: data.message,
+                  okText: '好'
+                }).then(() => {
+                  location.reload();
+                })
+                console.log(data);
+              })
+
+
+            }
+          })
+        }
+
+      },
+      rightNowBetting() {
+
+        if(this.bettingInfoList.length == 0){
+          $dialog.alert({
+            theme: 'ios',
+            title: '请先选择投注号码',
+            okText: '好'
+          })
+          return;
+        }
+
+        let param = {
+            "bettingInfoStr" : JSON.stringify(this.bettingInfoList),
+            lotteryTypeId : this.selectedLotteryTypeId,
+            ruleId : this.selectedRuleId,
+            isJoinBuy : 0,
+            lotteryNumId : this.lotteryNumId
+          };
+
+
+
+        console.log(param);
         $dialog.confirm({
           theme: 'ios',
           title: '确认投注?',
@@ -285,20 +398,48 @@ import {getBettingInfo,getBettingInfo2} from '../../utils/lottery/11s5.js'
         }).then((res) => {
           console.log('confirm result: ', res)
           if(res){
+            //清除选择
+            this.clearAll();
+            this.$api.post('betting/doBetting',param,data => {
+              //投注成功，刷新页面
+              $dialog.alert({
+                theme: 'ios',
+                title: data.message,
+                okText: '好'
+              }).then(() => {
+                location.reload();
+              })
+              console.log(data);
+            })
+
 
           }
         })
-      },
-      rightNowBetting() {
-        $dialog.confirm({
-          theme: 'ios',
-          title: '确认投注?',
-          okText: '确认',
-          cancelText: '取消'
 
-        }).then((res) => {
-          console.log('confirm result: ', res)
-        })
+      },
+      joinBuySetting() {
+        if(this.bettingInfoList.length == 0){
+          $dialog.alert({
+            theme: 'ios',
+            title: '请先选择投注号码',
+            okText: '好'
+          })
+          return;
+        }
+
+        let param = {
+            "bettingInfoStr" : JSON.stringify(this.bettingInfoList),
+            lotteryTypeId : this.selectedLotteryTypeId,
+            ruleId : this.selectedRuleId,
+            isJoinBuy : 0,
+            lotteryNumId : this.lotteryNumId,
+            totalBettingMoney : this.totalBettingMoney
+          };
+
+        let bettingInfoStr = JSON.stringify(param);
+        setCookie('11s5param',bettingInfoStr);
+
+        $router.forward('/lottery/joinbuysetting');
       },
       removeSelectedBetting (index){
         console.log(">>index:"+index);
@@ -309,12 +450,12 @@ import {getBettingInfo,getBettingInfo2} from '../../utils/lottery/11s5.js'
       },
       countTotalBettingAndMoney() {
         let tmpTotalMoney = 0;
-        let tmpTotalCount = 0;
+        let tmpTotalBettingAmounts = 0;
         this.bettingInfoList.forEach((value,index,arr) => {
           tmpTotalMoney += value.totalMoney;
-          tmpTotalCount += value.bettingCount;
+          tmpTotalBettingAmounts += value.bettingAmounts;
         })
-        this.totalBettingCount = tmpTotalCount;
+        this.totalBettingAmounts = tmpTotalBettingAmounts;
         this.totalBettingMoney = tmpTotalMoney;
       }
 

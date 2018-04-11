@@ -4,7 +4,7 @@
 export function getBettingInfo(ruleId,selectedBox,singlePrice){
   switch (ruleId) {
     //前三组选
-    case 9:
+    case 4:
       let tmpNumItem = '';
       let selectedCount = 0;
       for(let i = 0; i < selectedBox.length; i++){
@@ -19,7 +19,7 @@ export function getBettingInfo(ruleId,selectedBox,singlePrice){
           title: '请选择投注号码',
           okText: '好'
         });
-        return;
+        return false;
       }
       //至少选择3个
       if(selectedCount < 3){
@@ -28,7 +28,7 @@ export function getBettingInfo(ruleId,selectedBox,singlePrice){
           title: '至少选择3位号码',
           okText: '好'
         });
-        return;
+        return false;
       }
       let reg = new RegExp(",$");
       if(reg.test(tmpNumItem)){
@@ -37,9 +37,9 @@ export function getBettingInfo(ruleId,selectedBox,singlePrice){
       }
       console.log(tmpNumItem);
       let nums = tmpNumItem.split(',').length;
-      let tmpBettingCount = ( nums * (nums-1) * (nums-2) ) / 6;
-      let tmpCurrentMoney = tmpBettingCount * singlePrice;
-      return {selectedNum : tmpNumItem, bettingCount : tmpBettingCount, currentMoney : tmpCurrentMoney};
+      let tmpBettingAmounts = ( nums * (nums-1) * (nums-2) ) / 6;
+      let tmpBettingMoney = tmpBettingAmounts * singlePrice;
+      return {selectedNum : tmpNumItem, bettingAmounts : tmpBettingAmounts, bettingMoney : tmpBettingMoney};
     default:
 
   }
@@ -49,7 +49,7 @@ export function getBettingInfo(ruleId,selectedBox,singlePrice){
 export function getBettingInfo2(ruleId,selectedBox,singlePrice){
   switch (ruleId) {
     //前三组选
-    case 9:
+    case 4:
       let tmpNumItem = '';
       let selectedCount = 0;
       for(let i = 0; i < selectedBox.length; i++){
@@ -60,7 +60,7 @@ export function getBettingInfo2(ruleId,selectedBox,singlePrice){
       }
 
       if(selectedCount < 3){
-        return {selectedNum : tmpNumItem, bettingCount : 0, currentMoney : 0};
+        return {selectedNum : tmpNumItem, bettingAmounts : 0, bettingMoney : 0};
       }else{
         let reg = new RegExp(",$");
         if(reg.test(tmpNumItem)){
@@ -69,9 +69,9 @@ export function getBettingInfo2(ruleId,selectedBox,singlePrice){
         }
         console.log(tmpNumItem);
         let nums = tmpNumItem.split(',').length;
-        let tmpBettingCount = ( nums * (nums-1) * (nums-2) ) / 6;
-        let tmpCurrentMoney = tmpBettingCount * singlePrice;
-        return {selectedNum : tmpNumItem, bettingCount : tmpBettingCount, currentMoney : tmpCurrentMoney};
+        let tmpBettingAmounts = ( nums * (nums-1) * (nums-2) ) / 6;
+        let tmpBettingMoney = tmpBettingAmounts * singlePrice;
+        return {selectedNum : tmpNumItem, bettingAmounts : tmpBettingAmounts, bettingMoney : tmpBettingMoney};
       }
 
     default:

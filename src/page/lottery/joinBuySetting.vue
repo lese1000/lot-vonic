@@ -9,10 +9,10 @@
               <div class="card-input-outline">
                 <div class="card-input" >
                   <em>股份设置</em>
-                  <input type="number"  v-model="copiesNum" class="num"/>
+                  <input type="number"  v-model="totalPieceNum" class="num"/>
                   <em class="right">份</em>
                 </div>
-                <div class="right-font">每份 <b style="color:red">1000</b> 元</div>
+                <div class="right-font">每份 <b style="color:red">{{onePiecePrice}}</b> 元</div>
               </div>
 
               <div class="card-input-outline">
@@ -31,29 +31,29 @@
             <div class="card-input-outline" style="border:0;">
               <div class="card-input" >
                 <em>我要认购</em>
-                <input type="number"  v-model="copiesNum" class="num"/>
+                <input type="number"  v-model="myPieceNum" class="num"/>
                 <em class="right">份</em>
               </div>
-              <div class="right-font">￥<b style="color:red">1000</b> 元</div>
+              <div class="right-font">￥<b style="color:red">{{myBettingMoney}}</b> 元</div>
             </div>
             <div class="card-input-outline" style="border:0;">
-              <von-toggle :text="sureLeast.text" v-model="sureLeast.need" ></von-toggle>
+              <von-toggle :text="minPiece.text" v-model="minPiece.need" ></von-toggle>
             </div>
 
-            <div class="card-input-outline" v-if="sureLeast.need" style="border:0;">
+            <div class="card-input-outline" v-if="minPiece.need" style="border:0;">
               <div class="card-input" >
                 <em>保底数量</em>
-                <input type="number"  v-model="copiesNum" class="num"/>
+                <input type="number"  v-model="minPieceNum" class="num"/>
                 <em class="right">份</em>
               </div>
-              <div class="right-font">￥<b style="color:red">1000</b> 元</div>
+              <div class="right-font">￥<b style="color:red">{{minPieceNumMoney}}</b> 元</div>
             </div>
           </div>
         </div>
       </div>
 
 
-      <div   class="padding" style="padding-top:0px;">
+      <!-- <div   class="padding" style="padding-top:0px;">
         <accordion>
           <accordion-item title="可选设置" content-height="150">
             <von-input type="text" v-model="propaganda.title" placeholder="标题" label="合买标题" ></von-input>
@@ -61,9 +61,9 @@
             <von-input type="text" v-model="propaganda.players" placeholder="格式：张三,李四,王五" label="合买对象" ></von-input>
           </accordion-item>
         </accordion>
-      </div>
+      </div> -->
       <div class="padding">
-          <button class="button button-assertive button-block">确认发布</button>
+          <button @click="doJoinBuy" class="button button-assertive button-block">确认发布</button>
       </div>
 
 
@@ -73,6 +73,8 @@
   </div>
 </template>
 <script>
+
+  import {getCookie,delCookie} from '../../utils/cookie-util.js'
   export default {
     data() {
       return {
@@ -96,8 +98,7 @@
           name:'发布即公开',
           val:1
         },
-        copiesNum:1, //份数
-        sureLeast:
+        minPiece:
         {
           need:false,
           nums:0,
@@ -108,10 +109,36 @@
           title:'合买必中！',
           content:'买彩票讲的是缘分和坚持。',
           players: ''
-        }
+        },
+        totalPieceNum:1, //总份数
+        myPieceNum:1,//我认购的份数
+        minPieceNum:0,//最低认购多少份
+        onePiecePrice:1,//一份的价格
+        totalBettingMoney : 0 ,//投注总额,
+        requestParam : {}
 
 
       }
+    },
+    created() {
+      let tmpParam = getCookie('11s5param');
+      if(tmpParam){
+        this.requestParam = JSON.parse(tmpParam);
+        this.totalBettingMoney = this.requestParam.totalBettingMoney;
+        // this.onePiecePrice = this.totalBettingMoney;
+        this.totalPieceNum = this.totalBettingMoney;
+      }else{
+        $dialog.alert({
+          theme: 'ios',
+          title: '请先选择投注号码',
+          okText: '好'
+        }).then(() => {
+          $router.back('/lottery/luckfive');
+        })
+
+      }
+
+
     },
     methods: {
       back() {
@@ -138,6 +165,116 @@
           }
         }
         })
+      },
+      doJoinBuy () {
+        console.log('xxxx');
+        let param = this.requestParam;
+        let joinBuyInfo = {
+          totalPieceNum : this.totalPieceNum,
+          myPieceNum : this.myPieceNum,
+          leastNum : this.minPieceNum,
+          planType : this.selectedScheme.val,
+        }
+        param.joinBuyInfoStr = JSON.stringify(joinBuyInfo);
+        $dialog.confirm({
+          theme: 'ios',
+          title: '确认投注?',
+          okText: '确认',
+          cancelText: '取消'
+        }).then((res) => {
+          if(res){
+            this.$api.post('betting/doJoinBuy',param,data => {
+              //投注成功，刷新页面
+              $dialog.alert({
+                theme: 'ios',
+                title: data.message,
+                okText: '好'
+              }).then(() => {
+                //清除cookie中的缓存
+                this.clearAll();
+                this.back();
+              })
+              console.log(data);
+            })
+
+
+          }
+        })
+      },
+      clearAll () {
+        delCookie('11s5param');
+      }
+    },
+    watch : {
+      totalPieceNum (newTotalPieceNum,oldTotalPieceNum) {
+        console.log('totalPieceNum:'+this.totalPieceNum);
+        if(this.totalPieceNum ==''){
+
+        }else{
+          let intReg = /^[1-9]\d*$/;
+          if(!intReg.test(this.totalPieceNum)){
+            this.totalPieceNum = oldTotalPieceNum;
+            $toast.show('请填写正确数值，须为整数', 3000);
+            return;
+          }
+          if(this.totalPieceNum < 1){
+            this.totalPieceNum = 1;
+            $toast.show('请填写正确数值，最少1份', 3000);
+          }else{
+            if((this.totalBettingMoney % this.totalPieceNum) == 0){
+              this.onePiecePrice = this.totalBettingMoney / this.totalPieceNum;
+              //设置最低认购数量
+              this.myPieceNum = Math.ceil(this.totalPieceNum * 0.05);
+
+            }else{
+              this.totalPieceNum = oldTotalPieceNum;
+              $toast.show('请填写正确数值，须能整除', 3000);
+            }
+          }
+        }
+
+      },
+      myPieceNum (newMyPieceNum,oldPieceNum){
+        if(this.myPieceNum ==''){
+
+        }else{
+          let intReg = /^[1-9]\d*$/;
+          if(!intReg.test(this.myPieceNum)){
+            this.myPieceNum = oldPieceNum;
+            $toast.show('请填写正确数值，须为整数', 3000);
+            return;
+          }
+          if(this.myPieceNum < Math.ceil(this.totalPieceNum * 0.05) ){
+            this.myPieceNum = Math.ceil(this.totalPieceNum * 0.05);
+            $toast.show('最少认购' + this.myPieceNum + '份', 3000);
+          }
+
+        }
+      },
+      minPieceNum (newMinPieceNum, oldMinPieceNum){
+        if(this.minPieceNum ==''){
+
+        }else{
+          let intReg = /^[0-9]\d*$/;
+          if(!intReg.test(this.minPieceNum)){
+            this.minPieceNum = oldMinPieceNum;
+            $toast.show('请填写正确数值，须为整数', 3000);
+            return;
+          }
+          if(this.minPieceNum > (this.totalPieceNum - this.myPieceNum) ){
+            this.minPieceNum = oldMinPieceNum;
+            $toast.show('保底份数不能大于剩余股份总额', 3000);
+          }
+
+        }
+      }
+    },
+    computed : {
+      myBettingMoney (){
+        return this.myPieceNum * this.onePiecePrice;
+      },
+      minPieceNumMoney () {
+        return this.minPieceNum * this.onePiecePrice;
       }
     }
   }

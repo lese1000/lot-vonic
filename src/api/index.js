@@ -122,19 +122,31 @@ function apiAxios (method, url, params, success, failure) {
         success(res.data)
       }
     } else {
-      if (failure) {
-        failure(res.data)
-      } else {
 
-        //window.alert('error: ' + JSON.stringify(res.data))
-        /* Confirm 确认框 */
+      if(res.data.code == '401'){
         $dialog.alert({
           theme: 'ios',
-          title: res.data.message,
+          title: '登陆信息已过期，请重新登录',
           okText: '好'
         }).then(() => {
-          console.log('alert hide.')
+          $router.forward('/');
         })
+
+      }else{
+        if (failure) {
+          failure(res.data)
+        } else {
+
+          //window.alert('error: ' + JSON.stringify(res.data))
+          /* Confirm 确认框 */
+          $dialog.alert({
+            theme: 'ios',
+            title: res.data.message,
+            okText: '好'
+          }).then(() => {
+            // console.log('alert hide.')
+          })
+        }
       }
     }
   })
@@ -147,7 +159,7 @@ function apiAxios (method, url, params, success, failure) {
         title: 'api error, HTTP CODE: ' + res.status,
         okText: '好'
       }).then(() => {
-        console.log('alert hide.')
+        // console.log('alert hide.')
       })
     }
   })

@@ -1,5 +1,5 @@
 <template>
-  <div class="page has-navbar" v-nav="{title: '参与详情'}">
+  <div class="page has-navbar" v-nav="{title: '参与详情',showBackButton: true, onBackButtonClick: back }">
     <scroll class="page-content"
             :on-refresh="onRefresh"
             :on-infinite="onInfinite">
@@ -29,6 +29,9 @@
     },
 
     methods: {
+      back (index) {
+          $router.back('/joinbuy/index');
+      },
       onRefresh(done) {
         setTimeout(() => {
           let start = this.top - 1

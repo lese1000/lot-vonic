@@ -9,62 +9,16 @@
                 :on-infinite="onInfinite">
 
 
-                <div class="card" v-for="(item, index) in items">
+                <div class="card" v-for="(item, index) in jionBuyList">
                   <div class="card-header">幸运五分彩{{index+1}}<span style="float:right"></span>第 20180113133 期</div>
                   <div class="card-content">
                     <div class="card-content-inner">
                       <div style="text-align:left;padding-bottom:5px;">
-                          <span style="color:red;">投注内容：<span class="positive">点击查看</span></span><span class="lottery-tip bg-blue ">未开奖</span>
-                      </div>
-                      <div style="width:100%;border:1px solid #a59f9f;overflow:scroll;color:gray;">
-                          <table class="selected-num">
-                            <tr>
-                              <td>0,1,2,3</td>
-                              <td>10 注</td>
-                              <td>10 倍</td>
-                              <td>20000元</td>
-
-                            </tr>
-                            <tr>
-                              <td>0,1,2,</td>
-                              <td>10 注</td>
-                              <td>10 倍</td>
-                              <td>20000元</td>
-
-                            </tr>
-                            <tr>
-                              <td>0,1,2,3,4,5,6,7,8,9</td>
-                              <td>10 注</td>
-                              <td>10 倍</td>
-                              <td>20000元</td>
-
-                            </tr>
-                            <tr>
-                              <td>0,1,2,3,4,5,6,7,8,9</td>
-                              <td>10 注</td>
-                              <td>10 倍</td>
-                              <td>20000元</td>
-
-                            </tr>
-                            <tr>
-                              <td>0,1,2,3,4,5,6,7,8,9</td>
-                              <td>10 注</td>
-                              <td>10 倍</td>
-                              <td>20000元</td>
-
-                            </tr>
-                            <tr>
-                              <td>0,1,2,3,4,5,6,7,8,9</td>
-                              <td>10 注</td>
-                              <td>10 倍</td>
-                              <td>20000元</td>
-
-                            </tr>
-
-                          </table>
+                          <span style="color:red;">合买编号：<span class="positive">201808091211</span></span><span class="lottery-tip bg-blue ">未开奖</span>
                       </div>
 
-                    <div style="width:100%;height:50px;border:1px solid #a59f9f;overflow:scroll;color:gray;margin-top:5px;">
+
+                    <!-- <div style="width:100%;height:50px;border:0px solid #a59f9f;overflow:scroll;color:gray;margin-top:5px;"> -->
                       <table class="gridtable" style="margin-top:5px;">
                         <tr>
                           <td style="width:26%;padding-left:5px;">方案金额</td>
@@ -81,13 +35,13 @@
                           <td>150%</td>
                         </tr>
                       </table>
-                    </div>
+                    <!-- </div> -->
                     </div>
                   </div>
-                  <div class="card-footer">发起人：李四<button class="button button-assertive button-small" style="float:right" @click="onJoinBuy(index)">参与合买</button></div>
+                  <div class="card-footer"><button class="button button-positive button-small" style="float:right" @click="toJoinBuyDetail(index)">参与详情</button><button class="button button-assertive button-small" style="float:right" @click="toJoinBuy(index)">立即合买</button><button class="button button-royal button-small" style="float:right" @click="toBettingDetail(index)">投注详情</button></div>
                 </div>
 
-          <div v-if="infiniteCount >= 2" slot="infinite" class="text-center">没有更多数据</div>
+          <div v-if="noMoreData" slot="infinite" class="text-center">没有更多数据</div>
         </scroll>
   </div>
   </div>
@@ -97,19 +51,35 @@
   export default {
     data () {
       return {
-        items: [],
-        infiniteCount: 0,
-        jionBuyList:[]
+        jionBuyList:[],
+        pageNum:1,
+        pageSize:10,
+        noMoreData : false
 
       }
     },
 
     mounted() {
-      for (let i = 1; i <= 10; i++) {
-        this.items.push(i + ' - keep walking, be 2 with you.')
+      let param = {
+        pageNum : this.pageNum,
+        pageSize :this.pageSize
       }
-      this.top = 1
-      this.bottom = 10
+      this.$api.post('joinBuy/list',param,data => {
+        if(data.data ){
+          data.data.forEach((item,index,arr) => {
+            this.jionBuyList.push(item);
+          });
+          if(data.data.length < this.pageSize){
+            this.noMoreData = true;
+          }
+          this.bottom = data.data.length;
+
+        }else{
+            this.noMoreData = true;
+        }
+        console.log('noMoreData:'+ this.noMoreData);
+      })
+
     },
 
 
@@ -119,34 +89,56 @@
 
     methods: {
       onRefresh(done) {
-        setTimeout(() => {
-          let start = this.top - 1
-          for (let i = start; i > start - 10; i--) {
-            this.items.splice(0, 0, i + ' - keep walking, be 2 with you.')
-          }
-          this.top = this.top - 10;
-
+        let param = {
+          pageNum : 1,
+          pageSize : this.pageNum * this.pageSize
+        }
+        this.$api.post('joinBuy/list',param,data => {
+          this.jionBuyList = data.data;
           done()
-        }, 1500)
+        })
+
+
+
       },
 
       onInfinite(done) {
-        setTimeout(() => {
-          if (this.infiniteCount < 2) {
-            let start = this.bottom + 1
-            for (let i = start; i < start + 10; i++) {
-              this.items.push(i + ' - keep walking, be 2 with you.')
+        if(this.noMoreData){
+          return;
+        }
+        this.pageNum ++ ;
+        console.log('pageNum:'+this.pageNum);
+        let param = {
+          pageNum : this.pageNum,
+          pageSize :this.pageSize
+        }
+        this.$api.post('joinBuy/list',param,data => {
+          if(data.data ){
+            data.data.forEach((item,index,arr) => {
+              this.jionBuyList.push(item);
+            });
+            if(data.data.length < this.pageSize){
+              this.noMoreData = true;
             }
-            this.bottom = this.bottom + 10;
+            // this.bottom += data.data.length;
 
-            this.infiniteCount++
+          }else{
+              this.noMoreData = true;
           }
+          console.log('noMoreData:'+ this.noMoreData);
+          done()//告之加载完毕
+        })
 
-          done()
-        }, 1500)
+
       },
-      onJoinBuy (){
+      toJoinBuy (index){
         $router.forward("/joinbuy/dobuy");
+      },
+      toJoinBuyDetail (index){
+        $router.forward("/joinbuy/detail");
+      },
+      toBettingDetail (index){
+        $router.forward("/joinbuy/bettingDetail");
       },
 
       back (index) {
