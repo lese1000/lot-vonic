@@ -20,19 +20,21 @@
         <div class="card-content">
           <div class="card-content-inner">
             <div class="show-tip-div">
-              <span class="show-tip-div-left">可用余额:</span><span class="show-tip-div-right"><b style="color:red">10000</b> 元</span>
+              <span class="show-tip-div-left">可用余额:</span><span class="show-tip-div-right"><b style="color:red">{{balanceVal}}</b> 元</span>
             </div>
 
           </div>
         </div>
       </div>
 
-        <von-input type="text" v-model="cashInfo.cashInfoName" placeholder="收款人姓名" label="收款人姓名"></von-input>
-        <von-input type="text" v-model="cashInfo.cashInfoBank" placeholder="开户银行" label="开户银行"></von-input>
-        <von-input type="text" v-model="cashInfo.cashInfoAccount" placeholder="银行账号" label="银行账号"></von-input>
-        <von-input type="text" v-model="cashInfo.cashInfoMoney" placeholder="提款金额" label="提款金额"></von-input>
+        <von-input type="text" v-model="cashInfo.fullName" placeholder="收款人姓名" label="收款人姓名"></von-input>
+        <von-input type="text" v-model="cashInfo.bank" placeholder="开户银行" label="开户银行"></von-input>
+        <von-input type="text" v-model="cashInfo.account" placeholder="银行账号" label="银行账号"></von-input>
+        <von-input type="text" v-model="cashInfo.cashVal" placeholder="提现金额" label="提现金额"></von-input>
+        <von-input type="password" v-model="cashInfo.payPasswd" placeholder="取款密码" label="取款密码"></von-input>
+
       <div class="padding">
-        <button class="button button-block button-positive">提交</button>
+        <button @click='saveCashRecord' class="button button-block button-positive">提交</button>
       </div>
     </div>
   </div>
@@ -43,17 +45,48 @@
       return {
         cashInfo :
         {
-          cashInfoName:'',
-          cashInfoBank:'',
-          cashInfoAccount:'1502006901207575663',
-          cashInfoMoney:''
-        }
+          fullName:'',
+          bank:'',
+          account:'',
+          cashVal:'',
+          payPasswd:''
+
+        },
+        balanceVal : 0
       }
+    },
+    created() {
+      this.$api.post('balance/getBalanceVal', {}, response => {
+        this.balanceVal = response.data;
+      })
     },
     methods: {
 
       back() {
         $router.back('/account/cash/index')
+      },
+      saveCashRecord() {
+        $dialog.confirm({
+          theme: 'ios',
+          title: '确认提交?',
+          okText: '确认',
+          cancelText: '取消'
+
+        }).then((res) => {
+          if(res){
+            let param = this.cashInfo;
+
+            this.$api.post('cash/saveCashRecord',param, response => {
+              $dialog.alert({
+                theme: 'ios',
+                title: response.message,
+                okText: '好'
+              }).then(() => {
+                $router.replace('/account/cash/records');
+              })
+            })
+          }
+        })
       }
     }
   }

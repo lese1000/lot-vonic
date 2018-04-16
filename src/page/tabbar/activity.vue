@@ -1,30 +1,102 @@
 <template lang="html">
-  <div class="page has-navbar has-tabbar" v-nav="{ title: '最新活动'}" v-tabbar-menu-index="1">
-    <div class="page-content">
-      <list class=" hl-list-borderless">
-        <item class=" item-icon-right" @click.native="$router.forward('/activity/detail')">
-          充值满1000送10
-          <i class="icon ion-ios-arrow-right"></i>
-        </item>
-        <item class="item-icon-right" @click.native="$router.forward('/activity/detail')">
-          充值满10000送100
-          <i class="icon ion-ios-arrow-right"></i>
-        </item>
-        <item class="item-icon-right" @click.native="$router.forward('/activity/detail')">
-          充值满10000送100
-          <i class="icon ion-ios-arrow-right"></i>
-        </item>
-        <item class="item-icon-right" @click.native="$router.forward('/activity/detail')">
-          充值满10000送100
-          <i class="icon ion-ios-arrow-right"></i>
-        </item>
-      </list>
+  <div class="page has-navbar" v-nav="{ title: '最新活动',showBackButton: true, onBackButtonClick: back }" >
+    <scroll class="page-content"
+            :on-refresh="onRefresh"
+            :on-infinite="onInfinite">
+            <list class=" hl-list-borderless">
+              <item class=" item-icon-right" @click.native="$router.forward('/notice/detail')">
+                关于充值账号变更通知
+                <i class="icon ion-ios-arrow-right"></i>
+              </item>
+            </list>
+
+      <div v-if="noMoreData" slot="infinite" class="text-center">没有更多数据</div>
+    </scroll>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  data (){
+    return {
+      items : [],
+      noMoreData : false,
+      pageNum : 1,
+      pageSize : 10
+    }
+  },
+  mounted (){
+    let param = {
+      pageNum : this.pageNum,
+      pageSize : this.pageSize
+    }
+    this.$api.post('recharge/listRechargeRecord',param, response => {
+      if(response.data){
+        this.items = response.data;
+        if(response.data.length < this.pageSize){
+          this.noMoreData = true;
+        }
+        this.top = 1;
+        this.bottom = response.data.length;
+      }else{
+        this.noMoreData = true;
+      }
+    })
+
+  },
+  methods:{
+    back() {
+      $router.back('/index/home')
+    },
+
+    onRefresh(done) {
+      let param = {
+        pageNum : 1,
+        pageSize : this.pageNum * this.pageSize
+      }
+      this.$api.post('recharge/listRechargeRecord',param, response => {
+        if(response.data){
+          this.items = response.data;
+          if(response.data.length < (this.pageNum * this.pageSize)){
+            this.noMoreData = true;
+          }
+          this.bottom = response.data.length;
+        }else{
+          this.noMoreData = true;
+        }
+
+        done();
+      })
+    },
+    onInfinite(done) {
+      if(this.noMoreData){
+        return;
+      }
+      this.pageNum ++;
+      let param = {
+        pageNum : this.pageNum,
+        pageSize : this.pageSize
+      }
+      this.$api.post('recharge/listRechargeRecord',param, response => {
+        if(response.data){
+          response.data.forEach((value,index,arr) => {
+            this.items.push(value);
+          })
+          if(response.data.length < this.pageSize){
+            this.noMoreData = true;
+          }
+          this.bottom += response.data.length;
+        }else{
+          this.noMoreData = true;
+        }
+
+        done();
+      })
+    },
+
+
+  }
 }
 </script>
 

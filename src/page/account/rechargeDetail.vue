@@ -15,31 +15,42 @@
           </div>
         </div>
       </div>
-      <div class="card">
-        <div class="card-header">存款信息</div>
-        <div class="card-content">
-          <div class="card-content-inner">
-            <div class="show-tip-div">
-              <span class="show-tip-div-left">银行:</span><span class="show-tip-div-right">工商银行</span>
-            </div>
-            <div class="show-tip-div">
-              <span class="show-tip-div-left">收款人:</span><span class="show-tip-div-right">张三</span>
-            </div>
-            <div class="show-tip-div">
-              <span class="show-tip-div-left">开户行:</span><span class="show-tip-div-right">南昌市南昌莲塘支行</span>
-            </div>
-            <div class="show-tip-div">
-              <span class="show-tip-div-left">账号:</span><span class="show-tip-div-right">1502006901207575663</span>
+      <div class="card" v-for="(item,index) in receivablesInfoList">
+        <div v-if="item.useImg == 0">
+          <div class="card-header">存款信息({{index+1}})</div>
+          <div class="card-content">
+            <div class="card-content-inner">
+              <div class="show-tip-div">
+                <span class="show-tip-div-left">银行:</span><span class="show-tip-div-right">{{item.bank}}</span>
+              </div>
+              <div class="show-tip-div">
+                <span class="show-tip-div-left">收款人:</span><span class="show-tip-div-right">{{item.fullName}}</span>
+              </div>
+              <div class="show-tip-div">
+                <span class="show-tip-div-left">开户行:</span><span class="show-tip-div-right">{{item.openingBank}}</span>
+              </div>
+              <div class="show-tip-div">
+                <span class="show-tip-div-left">账号:</span><span class="show-tip-div-right">{{item.account}}</span>
+              </div>
             </div>
           </div>
         </div>
+        <div v-else>
+          <div class="card-header">二维码转账({{index+1}})</div>
+          <div class="card-content">
+            <div class="card-content-inner">
+              <img :src="item.imgUrl" style="width:100%;min-height:50px;"/>
+            </div>
+          </div>
+        </div>
+
       </div>
 
-        <von-input type="text" v-model="rechargeInfo.chargeName" placeholder="存款人姓名" label="存款人姓名"></von-input>
-        <von-input type="text" v-model="rechargeInfo.chargeAccount" placeholder="支付账号" label="支付账号"></von-input>
-        <von-input type="text" v-model="rechargeInfo.chargeMoney" placeholder="存款金额" label="存款金额"></von-input>
+        <von-input type="text" v-model="rechargeInfo.fullName" placeholder="存款人姓名" label="存款人姓名"></von-input>
+        <von-input type="text" v-model="rechargeInfo.payAccount" placeholder="支付账号" label="支付账号"></von-input>
+        <von-input type="text" v-model="rechargeInfo.rechargeVal" placeholder="存款金额" label="存款金额"></von-input>
       <div class="padding">
-        <button class="button button-block button-positive">提交</button>
+        <button @click="saveRechargeRecord" class="button button-block button-positive">提交</button>
       </div>
     </div>
   </div>
@@ -50,16 +61,46 @@
       return {
         rechargeInfo :
         {
-          chargeName:'',
-          chargeAccount:'1502006901207575663',
-          chargeMoney:''
-        }
+          fullName:'',
+          payAccount:'',
+          rechargeVal:''
+        },
+        receivablesInfoList : []
       }
+    },
+    created() {
+      this.$api.post('recharge/getReceivablesInfo',{},response => {
+        this.receivablesInfoList = response.data;
+      })
     },
     methods: {
 
       back() {
         $router.back('/account/recharge/index')
+      },
+      saveRechargeRecord() {
+        $dialog.confirm({
+          theme: 'ios',
+          title: '确认提交?',
+          okText: '确认',
+          cancelText: '取消'
+
+        }).then((res) => {
+          if(res){
+            let param = this.rechargeInfo;
+            console.log('param:'+param);
+            this.$api.post('recharge/saveRechargeRecord',param, response => {
+              $dialog.alert({
+                theme: 'ios',
+                title: response.message,
+                okText: '好'
+              }).then(() => {
+                $router.replace('/account/recharge/records');
+              })
+            })
+          }
+        })
+
       }
     }
   }

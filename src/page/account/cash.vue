@@ -3,11 +3,11 @@
     <div class="page-content">
       <list class=" hl-list-borderless">
         <item class=" item-icon-right" @click.native="$router.forward('/account/cash/detail')">
-          立即取款
+          立即提现
           <i class="icon ion-ios-arrow-right"></i>
         </item>
         <item class="item-icon-right" @click.native="$router.forward('/account/cash/records')">
-          取款记录
+          提现记录
           <i class="icon ion-ios-arrow-right"></i>
         </item>
 

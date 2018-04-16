@@ -15,7 +15,7 @@
                 余额
             </div>
             <div style="text-align:center;margin-top:-20px;">
-              ￥12345678.00
+              ￥{{balanceVal}}.00 元
             </div>
           </div>
 
@@ -25,11 +25,11 @@
           <span class="item-note">修改</span>
           <i class="icon ion-ios-arrow-right"></i>
         </item>
-        <item class="item-icon-right" @click.native="$router.forward('/basic/mdButton')">
-          支付密码<span class="item-note">修改</span>
+        <item class="item-icon-right" @click.native="$router.forward('/personal/changePayPassword')">
+          取款密码<span class="item-note">修改</span>
           <i class="icon ion-ios-arrow-right"></i>
         </item>
-        <item class="item-icon-right" @click.native="$router.forward('/basic/input')">
+        <item class="item-icon-right" @click.native="$router.forward('/personal/about')">
           在线客服 <span class="item-note">发起聊天</span>
           <i class="icon ion-ios-arrow-right"></i>
         </item>
@@ -50,6 +50,16 @@
 <script>
 import {checkCookie,delCookie} from '../../utils/cookie-util'
   export default {
+    data() {
+      return {
+        balanceVal : 0
+      }
+    },
+    created() {
+      this.$api.post('balance/getBalanceVal', {}, response => {
+        this.balanceVal = response.data;
+      })
+    },
     methods: {
       loginout(){
         $dialog.confirm({

@@ -5,10 +5,10 @@
       <list class="hl-list-borderless" style="margin-top:5px;">
 
         <item>
-          可购买数量：<b style="color:red">100000</b> 份
+          可购买数量：<b style="color:red">{{remainingPieceNum}}</b> 份 <span @click="refreshData" style="color:#4a90e2;margin-left:2px;">点击刷新</span>
         </item>
         <item>
-          每份价格：100 元
+          每份价格：<b style="color:red">{{singlePieceMoney}}</b> 元
         </item>
         <item>
           <div style="font-size:14px;float:left;line-height:35px;margin-right:10px;">
@@ -17,15 +17,18 @@
 
           <div class="gw_num">
             <em   @click="doSub()">-</em>
-            <input id="buyNum" type="number" v-model="buyNum" class="num"/>
+            <input id="buyNum" type="number" v-model="buyPieceNum" class="num"/>
             <em class="add" @click="doAdd()">+</em>
           </div>
+
+          <button @click="restBuyPieceNum" class="button button-small button-positive" style="margin-left:5px;margin-top:4px">重置</button>
+          <button @click="maxBuyPieceNum" class="button button-small button-positive" style="margin-left:5px;margin-top:4px">最大</button>
         </item>
         <item>
-          总金额：<span style="color:red">10000</span> 元
+          总金额：<span style="color:red">{{totalBettingMoney}}</span> 元
         </item>
       </list>
-      <button class="button button-assertive button-block">确认购买</button>
+      <button @click='doJoinBuy2' class="button button-assertive button-block">确认购买</button>
 
     </div>
   </div>
@@ -34,19 +37,87 @@
   export default {
     data() {
       return {
-        buyNum : 1
+        buyPieceNum : 1,
+        remainingPieceNum : 0,
+        singlePieceMoney : 1,
+        joinBuyId : 0
       }
+    },
+    created () {
+      this.joinBuyId = this.$route.params.joinBuyId;
+      let param = this.$route.params;
+      this.$api.post('joinBuy/getJoinBuyInfo',param,data => {
+          if(data.data){
+            this.remainingPieceNum = data.data.remainingPieceNum;
+            this.singlePieceMoney = data.data.singlePieceMoney;
+          }
+      })
+
     },
     methods: {
       back() {
         $router.back('/joinbuy/index')
       },
       doAdd() {
-        this.buyNum ++;
+        if(this.buyPieceNum < this.remainingPieceNum){
+          this.buyPieceNum ++;
+        }else{
+          $toast.show('最大可购买数量为:' + this.remainingPieceNum + '份', 3000);
+        }
+
       },
       doSub() {
-        if(this.buyNum >= 2){
-          this.buyNum --;
+        if(this.buyPieceNum >= 2){
+          this.buyPieceNum --;
+        }
+      },
+      restBuyPieceNum() {
+        this.buyPieceNum = 1;
+      },
+      maxBuyPieceNum() {
+        this.buyPieceNum = this.remainingPieceNum;
+      },
+      doJoinBuy2() {
+        let param = {
+          buyPieceNum : this.buyPieceNum,
+          joinBuyId : this.joinBuyId
+        }
+        this.$api.post('joinBuy/doJoinBuy2',param,data => {
+          $dialog.alert({
+            theme: 'ios',
+            title: data.message,
+            okText: '好'
+          }).then(() => {
+            this.back();
+          })
+        })
+      },
+      refreshData() {
+        this.joinBuyId = this.$route.params.joinBuyId;
+        let param = this.$route.params;
+        this.$api.post('joinBuy/getJoinBuyInfo',param,data => {
+            if(data.data){
+              this.remainingPieceNum = data.data.remainingPieceNum;
+              this.singlePieceMoney = data.data.singlePieceMoney;
+            }
+        })
+      }
+    },
+    computed : {
+      totalBettingMoney (){
+        return this.buyPieceNum * this.singlePieceMoney;
+      }
+    },
+    watch : {
+      buyPieceNum (newBuyPieceNum, oldBuyPieceNum){
+        let intReg = /^[1-9]\d*$/;
+        if(!intReg.test(this.buyPieceNum)){
+          this.totalPieceNum = oldTotalPieceNum;
+          $toast.show('请填写正确数值，须为整数', 3000);
+          return;
+        }else if( this.buyPieceNum > this.remainingPieceNum){
+          this.buyPieceNum = this.remainingPieceNum
+          $toast.show('最大可购买数量为:' + this.remainingPieceNum + '份', 3000);
         }
       }
     }

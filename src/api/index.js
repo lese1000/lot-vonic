@@ -32,7 +32,7 @@ axios.interceptors.request.use(
         //设置post方法以表单方式提交
         if (config.method == "POST"){
             config.data = qs.stringify(config.data);
-            config.headers['Content-Type'] = 'application/x-www-form-urlencoded';
+            config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8';
         }
         return config;
     },

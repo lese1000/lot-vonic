@@ -176,30 +176,42 @@
           planType : this.selectedScheme.val,
         }
         param.joinBuyInfoStr = JSON.stringify(joinBuyInfo);
-        $dialog.confirm({
-          theme: 'ios',
-          title: '确认投注?',
-          okText: '确认',
-          cancelText: '取消'
-        }).then((res) => {
-          if(res){
-            this.$api.post('betting/doJoinBuy',param,data => {
-              //投注成功，刷新页面
-              $dialog.alert({
-                theme: 'ios',
-                title: data.message,
-                okText: '好'
-              }).then(() => {
-                //清除cookie中的缓存
-                this.clearAll();
-                this.back();
-              })
-              console.log(data);
-            })
-
-
-          }
-        })
+        this.$api.post('betting/doJoinBuy',param,data => {
+          //投注成功，刷新页面
+          $dialog.alert({
+            theme: 'ios',
+            title: data.message,
+            okText: '好'
+          }).then(() => {
+            //清除cookie中的缓存
+            this.clearAll();
+            this.router.replace('/lottery/luckfive');
+          })
+        });
+        // $dialog.confirm({
+        //   theme: 'ios',
+        //   title: '确认发布?',
+        //   okText: '确认',
+        //   cancelText: '取消'
+        // }).then((res) => {
+        //   if(res){
+        //     this.$api.post('betting/doJoinBuy',param,data => {
+        //       //投注成功，刷新页面
+        //       $dialog.alert({
+        //         theme: 'ios',
+        //         title: data.message,
+        //         okText: '好'
+        //       }).then(() => {
+        //         //清除cookie中的缓存
+        //         this.clearAll();
+        //         this.back();
+        //       })
+        //       console.log(data);
+        //     })
+        //
+        //
+        //   }
+        // })
       },
       clearAll () {
         delCookie('11s5param');

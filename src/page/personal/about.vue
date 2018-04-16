@@ -9,7 +9,7 @@
   export default {
     methods: {
       back() {
-        $router.back('/')
+        $router.replace('/index/personal')
       }
     }
   }

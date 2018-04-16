@@ -2,11 +2,11 @@
   <div class="page has-navbar" v-nav="{title: '投注详情',showBackButton: true, onBackButtonClick: back }"  >
     <div class="page-content padding" >
             <div class="card" >
-              <div class="card-header">幸运五分彩<span style="float:right"></span>第 20180113133 期</div>
+              <div class="card-header">{{orderDetail.lotteryTypeName}}<span style="float:right"></span>第 {{orderDetail.lotteryNum}} 期</div>
               <div class="card-content">
                 <div class="card-content-inner">
                   <div style="text-align:left;padding-bottom:5px;">
-                      <span style="color:red;">合买编号：<span class="positive">201808091211</span></span><span class="lottery-tip bg-blue ">未开奖</span>
+                      <span style="color:red;">合买编号：<span class="positive">{{orderDetail.orderNum}}</span></span><span class="lottery-tip bg-blue ">未开奖</span>
                   </div>
                   <div style="width:100%;border:1px solid #a59f9f;overflow:scroll;color:gray;">
                       <table class="selected-num">
@@ -17,17 +17,17 @@
                           <td>金额</td>
                           <td></td>
                         </tr>
-                        <tr>
-                          <td>0,1,2,3</td>
-                          <td>10 注</td>
-                          <td>10 倍</td>
-                          <td>20000元</td>
+                        <tr v-for="item in orderDetail.orderDetailList">
+                          <td>{{item.bettingNum}}</td>
+                          <td>{{item.bettingCount}} 注</td>
+                          <td>{{item.rate}} 倍</td>
+                          <td>{{item.bettingMoney}} 元</td>
                         </tr>
                       </table>
                   </div>
                 </div>
               </div>
-              <div class="card-footer"><span></span><button class="button button-assertive button-small" style="float:right" @click="toJoinBuy(index)">立即合买</button></div>
+              <div class="card-footer"><span></span><button class="button button-assertive button-small" style="float:right" @click="toJoinBuy(orderDetail.joinBuyId)">立即合买</button></div>
             </div>
 
     </div>
@@ -39,7 +39,7 @@
   export default {
     data () {
       return {
-
+        orderDetail : {}
 
       }
     },
@@ -50,7 +50,10 @@
 
 
     created (){
-
+      let param = this.$route.params;
+      this.$api.post('joinBuy/getOrderDetail',param,data => {
+        this.orderDetail = data.data
+      })
     },
     destroyed (){
 
@@ -61,8 +64,8 @@
       back (index) {
           $router.back('/joinbuy/index');
       },
-      toJoinBuy (index){
-        $router.forward("/joinbuy/dobuy");
+      toJoinBuy (joinBuyId){
+        $router.forward("/joinbuy/dobuy/" + joinBuyId);
       }
     }
 

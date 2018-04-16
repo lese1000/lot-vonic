@@ -10,11 +10,15 @@
 
 
                 <div class="card" v-for="(item, index) in jionBuyList">
-                  <div class="card-header">幸运五分彩{{index+1}}<span style="float:right"></span>第 20180113133 期</div>
+                  <div class="card-header">{{item.lotteryTypeName}}<span style="float:right"></span>第 {{item.lotteryNum}} 期</div>
                   <div class="card-content">
                     <div class="card-content-inner">
                       <div style="text-align:left;padding-bottom:5px;">
-                          <span style="color:red;">合买编号：<span class="positive">201808091211</span></span><span class="lottery-tip bg-blue ">未开奖</span>
+                          <span style="color:red;">合买编号：<span class="positive">{{item.orderNum}}</span></span>
+                          <span v-if="item.orderStatus == 0" class="lottery-tip bg-blue">{{statusFormate(item.orderStatus)}}</span>
+                          <span v-if="item.orderStatus == 1" class="lottery-tip bg-red">{{statusFormate(item.orderStatus)}}</span>
+                          <span v-if="item.orderStatus == 2" class="lottery-tip bg-gray">{{statusFormate(item.orderStatus)}}</span>
+
                       </div>
 
 
@@ -28,17 +32,20 @@
                           <td style="width:17%">方案进度</td>
                         </tr>
                         <tr>
-                          <td style="width:26%;padding-left:5px;">1000元</td>
-                          <td>100</td>
-                          <td>5</td>
-                          <td>50份</td>
-                          <td>150%</td>
+                          <td style="width:26%;padding-left:5px;">{{item.totalBettingMoney}} 元</td>
+                          <td>{{item.totalPieceNum}} 份</td>
+                          <td>{{item.remainingPieceNum}} 份</td>
+                          <td>{{item.leastNum}} 份</td>
+                          <td>{{item.progress}}</td>
                         </tr>
                       </table>
                     <!-- </div> -->
                     </div>
                   </div>
-                  <div class="card-footer"><button class="button button-positive button-small" style="float:right" @click="toJoinBuyDetail(index)">参与详情</button><button class="button button-assertive button-small" style="float:right" @click="toJoinBuy(index)">立即合买</button><button class="button button-royal button-small" style="float:right" @click="toBettingDetail(index)">投注详情</button></div>
+                  <div class="card-footer">
+                    <button class="button button-positive button-small" style="float:right" @click="toJoinBuyDetail(item.joinBuyId)">参与详情</button>
+                    <button class="button button-assertive button-small" style="float:right" @click="toJoinBuy(item.joinBuyId)">立即合买</button>
+                    <button class="button button-positive button-small"  @click="toBettingDetail(item.joinBuyId)">投注号码</button></div>
                 </div>
 
           <div v-if="noMoreData" slot="infinite" class="text-center">没有更多数据</div>
@@ -54,7 +61,8 @@
         jionBuyList:[],
         pageNum:1,
         pageSize:10,
-        noMoreData : false
+        noMoreData : false,
+        joinBuyId : 0
 
       }
     },
@@ -94,7 +102,17 @@
           pageSize : this.pageNum * this.pageSize
         }
         this.$api.post('joinBuy/list',param,data => {
-          this.jionBuyList = data.data;
+          if(data.data){
+            this.jionBuyList = data.data;
+            if(data.data.length < (this.pageNum * this.pageSize)){
+              this.noMoreData = true;
+            }
+            this.top = 1;
+            this.bottom = data.data.length;
+          }else{
+            this.noMoreData = true;
+          }
+
           done()
         })
 
@@ -120,34 +138,49 @@
             if(data.data.length < this.pageSize){
               this.noMoreData = true;
             }
-            // this.bottom += data.data.length;
+             this.bottom += data.data.length;
 
           }else{
               this.noMoreData = true;
           }
-          console.log('noMoreData:'+ this.noMoreData);
           done()//告之加载完毕
         })
 
 
       },
-      toJoinBuy (index){
-        $router.forward("/joinbuy/dobuy");
+      toJoinBuy (joinBuyId){
+        $router.forward("/joinbuy/dobuy/" + joinBuyId);
       },
-      toJoinBuyDetail (index){
-        $router.forward("/joinbuy/detail");
+      toJoinBuyDetail (joinBuyId){
+        $router.forward("/joinbuy/detail/" + joinBuyId);
       },
-      toBettingDetail (index){
-        $router.forward("/joinbuy/bettingDetail");
+      toBettingDetail (joinBuyId){
+        $router.forward("/joinbuy/bettingDetail/" + joinBuyId);
       },
 
       back (index) {
         $router.back("/index/home");
+      },
+      statusFormate(status){
+        switch (status) {
+          case 0://未开奖
+            return '未开奖';
+          case 1://已中奖
+            return '已中奖';
+          case 2://未中奖
+            return '未中奖';
+          case 3:
+            return '';
+          default:
+            return '未开奖';
+        }
       }
+
     },
     destroyed() {
 
    },
+
   }
 </script>
 

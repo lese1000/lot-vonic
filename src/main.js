@@ -27,6 +27,7 @@ import Personal from './page/tabbar/Personal.vue'
 // 个人中心
 import About from './page/personal/About.vue'
 import ChangePassword from './page/personal/ChangePassword.vue'
+import ChangePayPassword from './page/personal/changePayPassword.vue'
 
 // 活动
 import ActivityDetail from './page/activity/ActivityDetail.vue'
@@ -86,6 +87,8 @@ const routes = [
   // { path: '/personal/index', component: Personal },
   { path: '/personal/about', component: About },
   { path: '/personal/changepassword', component: ChangePassword ,meta:{requireAuth:true}},
+  { path: '/personal/changePayPassword', component: ChangePayPassword ,meta:{requireAuth:true}},
+
 
   //活动
   { path: '/activity/detail', component : ActivityDetail},
@@ -108,9 +111,9 @@ const routes = [
 
   //合买
   { path: '/joinbuy/index', component: JoinBuy ,meta:{requireAuth:true}},
-  { path: '/joinbuy/dobuy', component: DoBuy ,meta:{requireAuth:true}},
-  { path: '/joinbuy/detail', component: JoinBuyDetail ,meta:{requireAuth:true}},
-  { path: '/joinbuy/bettingDetail', component: BettingDetail ,meta:{requireAuth:true}},
+  { path: '/joinbuy/dobuy/:joinBuyId', component: DoBuy ,meta:{requireAuth:true}},
+  { path: '/joinbuy/detail/:joinBuyId', component: JoinBuyDetail ,meta:{requireAuth:true}},
+  { path: '/joinbuy/bettingDetail/:joinBuyId', component: BettingDetail ,meta:{requireAuth:true}},
 
   //彩票
   { path: '/lottery/index', component: Lottery ,meta:{requireAuth:true}},
