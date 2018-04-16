@@ -10,7 +10,7 @@
 
 
                 <div class="card" v-for="(item, index) in jionBuyList">
-                  <div class="card-header">{{item.lotteryTypeName}}<span style="float:right"></span>第 {{item.lotteryNum}} 期</div>
+                  <div class="card-header">【{{index + 1}}】{{item.lotteryTypeName}}<span style="float:right"></span>第 {{item.lotteryNum}} 期</div>
                   <div class="card-content">
                     <div class="card-content-inner">
                       <div style="text-align:left;padding-bottom:5px;">
@@ -45,7 +45,7 @@
                   <div class="card-footer">
                     <button class="button button-positive button-small" style="float:right" @click="toJoinBuyDetail(item.joinBuyId)">参与详情</button>
                     <button class="button button-assertive button-small" style="float:right" @click="toJoinBuy(item.joinBuyId)">立即合买</button>
-                    <button class="button button-positive button-small"  @click="toBettingDetail(item.joinBuyId)">投注号码</button></div>
+                    <button class="button button-positive button-small"  @click="toBettingDetail(item.joinBuyId)">投注内容</button></div>
                 </div>
 
           <div v-if="noMoreData" slot="infinite" class="text-center">没有更多数据</div>

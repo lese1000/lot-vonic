@@ -52,6 +52,7 @@ import CashRecords from './page/account/CashRecords.vue'
 import JoinBuy from './page/joinbuy/Joinbuy.vue'
 import DoBuy from './page/joinbuy/DoBuy.vue'
 import JoinBuyDetail from './page/joinbuy/JoinBuyDetail.vue'
+import JoinBuyDetail2 from './page/joinbuy/JoinBuyDetail2.vue'
 import BettingDetail from './page/joinbuy/bettingDetail.vue'
 
 // 彩票模块
@@ -113,6 +114,7 @@ const routes = [
   { path: '/joinbuy/index', component: JoinBuy ,meta:{requireAuth:true}},
   { path: '/joinbuy/dobuy/:joinBuyId', component: DoBuy ,meta:{requireAuth:true}},
   { path: '/joinbuy/detail/:joinBuyId', component: JoinBuyDetail ,meta:{requireAuth:true}},
+  { path: '/joinbuy/detail2/:joinBuyId', component: JoinBuyDetail2 ,meta:{requireAuth:true}},//历史记录中查看参与情况
   { path: '/joinbuy/bettingDetail/:joinBuyId', component: BettingDetail ,meta:{requireAuth:true}},
 
   //彩票

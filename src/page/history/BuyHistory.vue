@@ -9,11 +9,11 @@
                       :on-infinite="onInfinite0">
 
                       <div class="card" v-for="(item,index) in items0 ">
-                        <div class="card-header">幸运五分彩<span>第 20180108118 期</span></div>
+                        <div class="card-header"> 【{{index + 1}}】{{item.lotteryTypeName}} <span>第 {{item.lotteryNum}} 期</span></div>
                         <div class="card-content">
                           <div class="card-content-inner">
                             <span style="float:left;">投注内容</span>
-                            <span class="lottery-tip ">未开奖</span>
+                            <!-- <span class="lottery-tip ">未开奖</span> -->
                             <span v-if="item.orderStatus == 0" class="lottery-tip bg-blue">{{statusFormate(item.orderStatus)}}</span>
                             <span v-if="item.orderStatus == 1" class="lottery-tip bg-red">{{statusFormate(item.orderStatus)}}</span>
                             <span v-if="item.orderStatus == 2" class="lottery-tip bg-gray">{{statusFormate(item.orderStatus)}}</span>
@@ -25,19 +25,19 @@
                                     <td>倍率</td>
                                     <td>金额</td>
                                   </tr>
-                                  <tr>
-                                    <td>0,1,2,3</td>
-                                    <td>10 注</td>
-                                    <td>10 倍</td>
-                                    <td>20000元</td>
+                                  <tr v-for="subItem in item.orderDetailList">
+                                    <td>{{subItem.bettingNum}}</td>
+                                    <td>{{subItem.bettingCount}} 注</td>
+                                    <td>{{subItem.rate}} 倍</td>
+                                    <td>{{subItem.bettingMoney}} 元</td>
                                   </tr>
                                 </table>
                             </div>
 
                           </div>
                         </div>
-                        <div class="card-footer">  <span>总金额：<span>￥10000</span></span><span >中奖金额：￥0.00</span></div>
-                        <div class="card-footer">  <span>2018/01/08 23:58:55</span></div>
+                        <div class="card-footer">  <span>投注金额：<span>￥{{item.totalBettingMoney}}</span></span><span >中奖金额：￥{{item.totalWinMoney}} 元</span></div>
+                        <div class="card-footer"> <span></span> <span>{{dateFormate(item.createDate)}}</span></div>
                       </div>
                   <div v-if="noMoreData0" slot="infinite" class="text-center">没有更多数据</div>
                 </scroll>
@@ -49,11 +49,11 @@
                       :on-infinite="onInfinite1">
 
                       <div class="card" v-for="(item,index) in items1 ">
-                        <div class="card-header">幸运五分彩<span>第 20180108118 期</span></div>
+                        <div class="card-header">【{{index + 1}}】{{item.lotteryTypeName}}<span>第 {{item.lotteryNum}} 期</span></div>
                         <div class="card-content">
                           <div class="card-content-inner">
                             <span style="float:left;">投注内容</span>
-                            <span class="lottery-tip bg-red">已中奖</span>
+                            <!-- <span class="lottery-tip bg-red">已中奖</span> -->
                             <span v-if="item.orderStatus == 0" class="lottery-tip bg-blue">{{statusFormate(item.orderStatus)}}</span>
                             <span v-if="item.orderStatus == 1" class="lottery-tip bg-red">{{statusFormate(item.orderStatus)}}</span>
                             <span v-if="item.orderStatus == 2" class="lottery-tip bg-gray">{{statusFormate(item.orderStatus)}}</span>
@@ -65,31 +65,19 @@
                                     <td>倍率</td>
                                     <td>金额</td>
                                   </tr>
-                                  <tr>
-                                    <td>0,1,2,3</td>
-                                    <td>10 注</td>
-                                    <td>10 倍</td>
-                                    <td>20000元</td>
-                                  </tr>
-                                  <tr>
-                                    <td>0,1,2,3</td>
-                                    <td>10 注</td>
-                                    <td>10 倍</td>
-                                    <td>20000元</td>
-                                  </tr>
-                                  <tr>
-                                    <td>0,1,2,3</td>
-                                    <td>10 注</td>
-                                    <td>10 倍</td>
-                                    <td>20000元</td>
+                                  <tr v-for="subItem in item.orderDetailList">
+                                    <td>{{subItem.bettingNum}}</td>
+                                    <td>{{subItem.bettingCount}} 注</td>
+                                    <td>{{subItem.rate}} 倍</td>
+                                    <td>{{subItem.bettingMoney}} 元</td>
                                   </tr>
                                 </table>
                             </div>
 
                           </div>
                         </div>
-                        <div class="card-footer">  <span>总金额：<span>￥10000</span></span><span class="font-red" >中奖金额：￥24432.00</span></div>
-                        <div class="card-footer">  <span>2018/01/08 23:58:55</span> <span class="font-blue">参与情况</span> </div>
+                        <div class="card-footer">  <span>投注金额：<span>￥{{item.totalBettingMoney}}</span></span><span class="font-red" >中奖金额：￥{{item.totalWinMoney}} 元</span></div>
+                        <div class="card-footer"> <span>{{dateFormate(item.createDate)}}</span> <span class="font-blue" @click="toJoinBuyDetail(item.joinBuyId)">参与情况</span> </div>
                       </div>
                   <div v-if="noMoreData1" slot="infinite" class="text-center">没有更多数据</div>
                 </scroll>
@@ -107,6 +95,8 @@
   }
 </style>
 <script>
+import {dateFtt} from '../../utils/date-util';
+
   export default{
     data(){
       return {
@@ -131,7 +121,7 @@
         pageNum : this.pageNum0,
         pageSize : this.pageSize0
       }
-      this.$api.post('cash/listCashRecord',param, response => {
+      this.$api.post('history/personalList',param, response => {
         if(response.data){
           this.items0 = response.data;
           if(response.data.length < this.pageSize0){
@@ -148,13 +138,13 @@
     methods: {
       onTabClick(index) {
         this.tabIndex = index
-        if(index == 1 && this.isFirstInit){
+        if(index == 1 ){
           this.isFirstInit = false;
           let param = {
             pageNum : this.pageNum1,
             pageSize : this.pageSize1
           }
-          this.$api.post('cash/listCashRecord',param, response => {
+          this.$api.post('history/joinBuyList',param, response => {
             if(response.data){
               this.items1 = response.data;
               if(response.data.length < this.pageSize1){
@@ -176,7 +166,7 @@
           pageNum : 1,
           pageSize : this.pageNum0 * this.pageSize0
         }
-        this.$api.post('cash/listCashRecord',param, response => {
+        this.$api.post('history/personalList',param, response => {
           if(response.data){
             this.items0 = response.data;
             if(response.data.length < (this.pageNum0 * this.pageSize0)){
@@ -199,7 +189,7 @@
           pageNum : this.pageNum0,
           pageSize : this.pageSize0
         }
-        this.$api.post('cash/listCashRecord',param, response => {
+        this.$api.post('history/personalList',param, response => {
           if(response.data){
             response.data.forEach((value,index,arr) => {
               this.items0.push(value);
@@ -207,7 +197,7 @@
             if(response.data.length < this.pageSize0){
               this.noMoreData0 = true;
             }
-            this.bottom += response.data.length;
+             this.bottom += response.data.length;
           }else{
             this.noMoreData0 = true;
           }
@@ -220,7 +210,7 @@
           pageNum : 1,
           pageSize : this.pageNum1 * this.pageSize1
         }
-        this.$api.post('cash/listCashRecord',param, response => {
+        this.$api.post('history/joinBuyList',param, response => {
           if(response.data){
             this.items1 = response.data;
             if(response.data.length < (this.pageNum1 * this.pageSize1)){
@@ -243,7 +233,7 @@
           pageNum : this.pageNum1,
           pageSize : this.pageSize1
         }
-        this.$api.post('cash/listCashRecord',param, response => {
+        this.$api.post('history/joinBuyList',param, response => {
           if(response.data){
             response.data.forEach((value,index,arr) => {
               this.items1.push(value);
@@ -259,6 +249,9 @@
           done();
         })
       },
+      toJoinBuyDetail (joinBuyId){
+        $router.forward("/joinbuy/detail2/" + joinBuyId);
+      },
       statusFormate(status){
         switch (status) {
           case 0://未开奖
@@ -272,6 +265,9 @@
           default:
             return '未开奖';
         }
+      },
+      dateFormate(date){
+        return dateFtt('yyyy-MM-dd hh:mm:ss',new Date(date))
       }
     }
   }

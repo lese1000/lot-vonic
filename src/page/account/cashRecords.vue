@@ -4,7 +4,7 @@
             :on-refresh="onRefresh"
             :on-infinite="onInfinite">
       <div class="card" v-for="(item,index) in items">
-        <div class="card-header">提现记录 [{{index +1}}]</div>
+        <div class="card-header">【{{index +1}}】提现记录</div>
         <div class="card-content">
           <div class="card-content-inner" style="color: #5f646e;">
               <div class="show-tip-div">

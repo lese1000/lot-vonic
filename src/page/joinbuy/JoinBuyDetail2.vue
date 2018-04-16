@@ -51,7 +51,7 @@ import {dateFtt} from '../../utils/date-util.js';
 
     methods: {
       back (index) {
-          $router.replace('/joinbuy/index');
+          $router.replace('/history/index');
       },
       onRefresh(done) {
         let param = this.$route.params;
