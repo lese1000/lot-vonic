@@ -6,7 +6,11 @@
               <div class="card-content">
                 <div class="card-content-inner">
                   <div style="text-align:left;padding-bottom:5px;">
-                      <span style="color:red;">合买编号：<span class="positive">{{orderDetail.orderNum}}</span></span><span class="lottery-tip bg-blue ">未开奖</span>
+                      <span style="color:red;">合买编号：<span class="positive">{{orderDetail.orderNum}}</span></span>
+                      <!-- <span class="lottery-tip bg-blue ">未开奖</span> -->
+                      <span v-if="orderDetail.orderStatus == 0" class="lottery-tip bg-blue">{{statusFormate(orderDetail.orderStatus)}}</span>
+                      <span v-if="orderDetail.orderStatus == 1" class="lottery-tip bg-red">{{statusFormate(orderDetail.orderStatus)}}</span>
+                      <span v-if="orderDetail.orderStatus == 2" class="lottery-tip bg-gray">{{statusFormate(orderDetail.orderStatus)}}</span>
                   </div>
                   <div style="width:100%;border:1px solid #a59f9f;overflow:scroll;color:gray;">
                       <table class="selected-num">
@@ -27,7 +31,7 @@
                   </div>
                 </div>
               </div>
-              <div class="card-footer"><span></span><button class="button button-assertive button-small" style="float:right" @click="toJoinBuy(orderDetail.joinBuyId)">立即合买</button></div>
+              <div class="card-footer"><span><span style="color:red;">开奖号码：<span class="positive">{{orderDetail.winNum}}</span></span></span><button v-if="orderDetail.orderStatus == 0" class="button button-assertive button-small" style="float:right" @click="toJoinBuy(orderDetail.joinBuyId)">立即合买</button></div>
             </div>
 
     </div>
@@ -66,6 +70,20 @@
       },
       toJoinBuy (joinBuyId){
         $router.forward("/joinbuy/dobuy/" + joinBuyId);
+      },
+      statusFormate(status){
+        switch (status) {
+          case 0://未开奖
+            return '未开奖';
+          case 1://已中奖
+            return '已中奖';
+          case 2://未中奖
+            return '未中奖';
+          case 3:
+            return '';
+          default:
+            return '未开奖';
+        }
       }
     }
 

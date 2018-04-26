@@ -12,16 +12,49 @@
         </item>
 
       </list>
+      <div class="card" >
+        <div class="card-header" >最新充值用户一览</div>
+        <div class="card-content">
+          <div class="card-content-inner" style="color:red;text-align:center; ">
+            <ul>
+              <li v-for="item in rechargeList">用户 {{playNameFormate(item.playerName)}} 充值了 {{item.rechargeVal}} 元 </li>
+            </ul>
+          </div>
+        </div>
+        <div class="card-footer">
+          <span></span>
+          <button class="button button-positive button-small"  @click="getNewestRechargeList()">刷新</button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 export default {
+  data() {
+    return {
+      rechargeList : []
+    }
+  },
+  created(){
+    this.getNewestRechargeList();
+  },
   methods: {
-
     back() {
       $router.back('/index/home')
+    },
+    playNameFormate(name){
+      if(name.length > 2){
+        return name.substr(0,1) + new Array(name.length - 1).join('*') + name.substr(-1);
+      }else{
+        return  new Array(name.length).join('*') + name.substr(-1);
+      }
+    },
+    getNewestRechargeList() {
+      this.$api.post('other/getNewestRechargeList', {}, response => {
+        this.rechargeList = response.data;
+      })
     }
   }
 }

@@ -8,7 +8,7 @@
       <von-input type="password" v-model="password" placeholder="密码" label="密码" style="margin-bottom: 5px;"></von-input>
 
       <div class="padding">
-        <button class="button button-dark button-block" @click="doLogin">确定</button>
+        <button class="button button-dark button-block" @click="doLogin">登录</button>
         <!-- <button class="button button-dark button-block" @click="doReg">注册</button> -->
       </div>
 

@@ -172,8 +172,11 @@ import {getCookie,setCookie,delCookie} from '../../utils/cookie-util.js'
       })
     },
     destroyed() {
-     if (this.playInstructionsModal)
+     if (this.playInstructionsModal){
        $modal.destroy(this.playInstructionsModal);
+     }
+     window.clearInterval(this.timerId);
+     this.timerId = null;
    },
 
 

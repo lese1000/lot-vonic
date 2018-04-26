@@ -37,6 +37,10 @@
           关于 <span class="item-note">详情</span>
           <i class="icon ion-ios-arrow-right"></i>
         </item>
+        <item class="item-icon-right" >
+          邀请链接 <span class="item-note" style="color:#4a90e2;" @click="copyMyInvitorUrl">点击复制</span>
+
+        </item>
       </list>
 
       <div class="padding">
@@ -48,16 +52,21 @@
   </div>
 </template>
 <script>
-import {checkCookie,delCookie} from '../../utils/cookie-util'
+import {checkCookie,delCookie,getCookie} from '../../utils/cookie-util'
+import {copyToClipboard} from '../../utils/other-util'
   export default {
     data() {
       return {
-        balanceVal : 0
+        balanceVal : 0,
+        invitorUrl : ''
       }
     },
     created() {
       this.$api.post('balance/getBalanceVal', {}, response => {
         this.balanceVal = response.data;
+      })
+      this.$api.post('player/invitorUrl', {}, response => {
+        this.invitorUrl = response.data;
       })
     },
     methods: {
@@ -90,8 +99,16 @@ import {checkCookie,delCookie} from '../../utils/cookie-util'
 
           }
         })
-
-
+      },
+      copyMyInvitorUrl() {
+        let playerId = getCookie('playerId');
+        let curUrl = window.location.href;
+        let invitorUrl = curUrl.split('#')[0] + '#/reg?p=' + playerId
+        if(copyToClipboard(invitorUrl)){
+          $toast.show('邀请链接已复制到剪切板', 3000);
+        }else{
+          $toast.show('您的浏览器不支持点击复制', 3000);
+        }
       }
     }
   }

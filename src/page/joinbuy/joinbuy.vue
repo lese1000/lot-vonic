@@ -43,8 +43,8 @@
                     </div>
                   </div>
                   <div class="card-footer">
-                    <button class="button button-positive button-small" style="float:right" @click="toJoinBuyDetail(item.joinBuyId)">参与详情</button>
-                    <button class="button button-assertive button-small" style="float:right" @click="toJoinBuy(item.joinBuyId)">立即合买</button>
+                    <button class="button button-positive button-small"  @click="toJoinBuyDetail(item.joinBuyId)">参与详情</button>
+                    <button v-if="item.orderStatus == 0" class="button button-assertive button-small"  @click="toJoinBuy(item.joinBuyId)">立即合买</button>
                     <button class="button button-positive button-small"  @click="toBettingDetail(item.joinBuyId)">投注内容</button></div>
                 </div>
 

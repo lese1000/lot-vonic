@@ -8,7 +8,7 @@
       <von-input type="password" v-model="password" placeholder="密码" label="密码" style="margin-bottom: 5px;"></von-input>
 
       <div class="padding">
-        <button class="button button-dark button-block" @click="doLogin">确认</button>
+        <button class="button button-dark button-block" @click="doReg">注册</button>
       </div>
 
     </div>
@@ -25,20 +25,25 @@
       }
     },
     methods:{
-      doLogin() {
-        console.log('do reg p:'+getCookie('p'));
+      doReg() {
+        let  curUrl = window.location.href;
+        let parentId = 0;
+        if(curUrl.indexOf('?') != -1){
+          let tmpParam = curUrl.split('?')[1];
+          parentId = tmpParam.split('=')[1];
+        }
         let param = {
           playerName:this.playerName,
           password:this.password,
-          p : getCookie('p')
+          p : parentId
         }
         this.$api.post('auth/reg',param,data => {
           $dialog.alert({
             theme: 'ios',
-            title: '注册成功',
+            title: '注册成功，请登陆',
             okText: '好'
           }).then(() => {
-            $router.forward('/index/home')
+            $router.forward('/')
           })
         })
 

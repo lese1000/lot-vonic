@@ -3,56 +3,16 @@
     <tabs :tab-items="tabs" :tab-index="tabIndex" :on-tab-click="onTabClick" tabColor="dark"></tabs>
     <div >
       <div class="tab-content">
-            <div v-if="tabIndex == 0">
-              <scroll class=" scroller-padding"
-                      :on-refresh="onRefresh0"
-                      :on-infinite="onInfinite0">
 
-                      <div class="card" v-for="(item,index) in items0 ">
-                        <div class="card-header"> 【{{index + 1}}】{{item.lotteryTypeName}} <span>第 {{item.lotteryNum}} 期</span></div>
-                        <div class="card-content">
-                          <div class="card-content-inner">
-                            <span style="float:left;">投注内容</span>
-                            <!-- <span class="lottery-tip ">未开奖</span> -->
-                            <span v-if="item.orderStatus == 0" class="lottery-tip bg-blue">{{statusFormate(item.orderStatus)}}</span>
-                            <span v-if="item.orderStatus == 1" class="lottery-tip bg-red">{{statusFormate(item.orderStatus)}}</span>
-                            <span v-if="item.orderStatus == 2" class="lottery-tip bg-gray">{{statusFormate(item.orderStatus)}}</span>
-                            <div class="betting-content">
-                                <table class="selected-num">
-                                  <tr>
-                                    <td>号码</td>
-                                    <td>注数</td>
-                                    <td>倍率</td>
-                                    <td>金额</td>
-                                  </tr>
-                                  <tr v-for="subItem in item.orderDetailList">
-                                    <td>{{subItem.bettingNum}}</td>
-                                    <td>{{subItem.bettingCount}} 注</td>
-                                    <td>{{subItem.rate}} 倍</td>
-                                    <td>{{subItem.bettingMoney}} 元</td>
-                                  </tr>
-                                </table>
-                            </div>
-
-                          </div>
-                        </div>
-                        <div class="card-footer">  <span>投注金额：<span>￥{{item.totalBettingMoney}}</span></span><span >中奖金额：￥{{item.totalWinMoney}} 元</span></div>
-                        <div class="card-footer"> <span></span> <span>{{dateFormate(item.createDate)}}</span></div>
-                      </div>
-                  <div v-if="noMoreData0" slot="infinite" class="text-center">没有更多数据</div>
-                </scroll>
-            </div>
-
-            <div v-if="tabIndex == 1">
               <scroll class="scroller-padding"
-                      :on-refresh="onRefresh1"
-                      :on-infinite="onInfinite1">
+                      :on-refresh="onRefresh"
+                      :on-infinite="onInfinite">
 
-                      <div class="card" v-for="(item,index) in items1 ">
+                      <div class="card" v-for="(item,index) in items ">
                         <div class="card-header">【{{index + 1}}】{{item.lotteryTypeName}}<span>第 {{item.lotteryNum}} 期</span></div>
                         <div class="card-content">
                           <div class="card-content-inner">
-                            <span style="float:left;">投注内容</span>
+                            <span style="float:left;">投注内容</span><span v-if="item.orderStatus != 0"  style="color:red"> 【开奖号码：{{item.winNum}}】</span>
                             <!-- <span class="lottery-tip bg-red">已中奖</span> -->
                             <span v-if="item.orderStatus == 0" class="lottery-tip bg-blue">{{statusFormate(item.orderStatus)}}</span>
                             <span v-if="item.orderStatus == 1" class="lottery-tip bg-red">{{statusFormate(item.orderStatus)}}</span>
@@ -76,12 +36,13 @@
 
                           </div>
                         </div>
-                        <div class="card-footer">  <span>投注金额：<span>￥{{item.totalBettingMoney}}</span></span><span class="font-red" >中奖金额：￥{{item.totalWinMoney}} 元</span></div>
-                        <div class="card-footer"> <span>{{dateFormate(item.createDate)}}</span> <span class="font-blue" @click="toJoinBuyDetail(item.joinBuyId)">参与情况</span> </div>
+
+                        <div class="card-footer">  <span>投注金额：<span>￥{{item.totalBettingMoney}}</span></span> <span class="font-red" >中奖金额：￥{{item.totalWinMoney}} 元</span></div>
+                        <div class="card-footer"><span><span  v-if="tabIndex == 1" class="font-blue" @click="toJoinBuyDetail(item.joinBuyId)">参与情况</span> </span><span>投注时间：{{dateFormate(item.createDate)}}</span> </div>
                       </div>
-                  <div v-if="noMoreData1" slot="infinite" class="text-center">没有更多数据</div>
+                  <div v-if="noMoreData" slot="infinite" class="text-center">没有更多数据</div>
                 </scroll>
-            </div>
+
       </div>
     </div>
 
@@ -105,145 +66,132 @@ import {dateFtt} from '../../utils/date-util';
           "参与合买"
         ],
         tabIndex: 0,
-        isFirstInit : true,
-        items0 : [],
-        items1 : [],
-        noMoreData0 : false,
-        noMoreData1: false,
-        pageNum0 : 1,
-        pageSize0 : 10,
-        pageNum1 : 1,
-        pageSize1 : 10
+        items : [],
+        noMoreData : false,
+        pageNum : 1,
+        pageSize : 50
       }
     },
     mounted() {
       let param = {
-        pageNum : this.pageNum0,
-        pageSize : this.pageSize0
+        pageNum : this.pageNum,
+        pageSize : this.pageSize
       }
       this.$api.post('history/personalList',param, response => {
         if(response.data){
-          this.items0 = response.data;
-          if(response.data.length < this.pageSize0){
-            this.noMoreData0 = true;
+          this.items = response.data;
+          if(response.data.length < this.pageSize){
+            this.noMoreData = true;
           }
-          this.top = 1;
-          this.bottom = response.data.length;
+          // this.top = 1;
+          // this.bottom = response.data.length;
         }else{
-          this.noMoreData0 = true;
+          this.noMoreData = true;
         }
       })
     },
 
     methods: {
       onTabClick(index) {
-        this.tabIndex = index
-        if(index == 1 ){
-          this.isFirstInit = false;
-          let param = {
-            pageNum : this.pageNum1,
-            pageSize : this.pageSize1
-          }
-          this.$api.post('history/joinBuyList',param, response => {
-            if(response.data){
-              this.items1 = response.data;
-              if(response.data.length < this.pageSize1){
-                this.noMoreData1 = true;
-              }
-              this.top = 1;
-              this.bottom = response.data.length;
-            }else{
-              this.noMoreData1 = true;
-            }
-          })
+        let innerHeight = this.$el.querySelector('.scroll-inner').clientHeight ;
+        console.log('innerHeight:'+innerHeight);
+        let scrollTop = this.$el.querySelector('.scroll').scrollTop = 0
+          console.log('scrollTop:'+scrollTop);
+          let outerHeight = this.$el.querySelector('.scroll').clientHeight
+          console.log('outerHeight:'+outerHeight);
+          let ptrHeight = this.$el.querySelector('.pull-to-refresh-layer').clientHeight ;
+          console.log('ptrHeight:'+ptrHeight);
+          let infiniteHeight = this.$el.querySelector('.infinite-layer').clientHeight
+          console.log('infiniteHeight:'+infiniteHeight);
+          let bottom = innerHeight - outerHeight - scrollTop - ptrHeight
+          console.log('bottom:'+bottom);
+
+
+
+        //不是当前tab重新初始化
+        if(this.tabIndex == index){
+          return;
+        }else{
+          this.pageNum = 1;
+          this.pageSize = 10;
+          this.noMoreData = false;
+          this.top = 0;
+          this.bottom = 0;
         }
+        this.tabIndex = index
+        let reqUrl = 'history/joinBuyList';
+        if(index == 0 ){
+          reqUrl = 'history/personalList';
+        }
+        let param = {
+          pageNum : this.pageNum,
+          pageSize : this.pageSize
+        }
+        this.$api.post(reqUrl,param, response => {
+          if(response.data){
+            this.items = response.data;
+            if(response.data.length < this.pageSize){
+              this.noMoreData = true;
+            }
+            // this.top = 1;
+            // this.bottom = response.data.length;
+          }else{
+            this.noMoreData = true;
+          }
+        })
       },
       back() {
         $router.replace("/index/home");
       },
-      onRefresh0(done) {
+      onRefresh(done) {
         let param = {
           pageNum : 1,
-          pageSize : this.pageNum0 * this.pageSize0
+          pageSize : this.pageNum * this.pageSize
         }
-        this.$api.post('history/personalList',param, response => {
+        let regUrl = 'history/personalList';
+        if(this.tabIndex == 1){
+          regUrl = 'history/joinBuyList'
+        }
+        this.$api.post(regUrl,param, response => {
           if(response.data){
-            this.items0 = response.data;
-            if(response.data.length < (this.pageNum0 * this.pageSize0)){
-              this.noMoreData0 = true;
+            this.items = response.data;
+            if(response.data.length < (this.pageNum * this.pageSize)){
+              this.noMoreData = true;
             }
-            this.bottom = response.data.length;
+            // this.bottom = response.data.length;
           }else{
-            this.noMoreData0 = true;
+            this.noMoreData = true;
           }
 
           done();
         })
       },
-      onInfinite0(done) {
-        if(this.noMoreData0){
+      onInfinite(done) {
+        console.log('noMoreData:'+this.noMoreData);
+
+        if(this.noMoreData){
           return;
         }
-        this.pageNum0 ++;
+        this.pageNum ++;
         let param = {
-          pageNum : this.pageNum0,
-          pageSize : this.pageSize0
+          pageNum : this.pageNum,
+          pageSize : this.pageSize
         }
-        this.$api.post('history/personalList',param, response => {
+        let regUrl = 'history/personalList';
+        if(this.tabIndex == 1){
+          regUrl = 'history/joinBuyList'
+        }
+        this.$api.post(regUrl,param, response => {
           if(response.data){
             response.data.forEach((value,index,arr) => {
-              this.items0.push(value);
+              this.items.push(value);
             })
-            if(response.data.length < this.pageSize0){
-              this.noMoreData0 = true;
+            if(response.data.length < this.pageSize){
+              this.noMoreData = true;
             }
-             this.bottom += response.data.length;
+            // this.bottom += response.data.length;
           }else{
-            this.noMoreData0 = true;
-          }
-
-          done();
-        })
-      },
-      onRefresh1(done) {
-        let param = {
-          pageNum : 1,
-          pageSize : this.pageNum1 * this.pageSize1
-        }
-        this.$api.post('history/joinBuyList',param, response => {
-          if(response.data){
-            this.items1 = response.data;
-            if(response.data.length < (this.pageNum1 * this.pageSize1)){
-              this.noMoreData1 = true;
-            }
-            this.bottom = response.data.length;
-          }else{
-            this.noMoreData1 = true;
-          }
-
-          done();
-        })
-      },
-      onInfinite1(done) {
-        if(this.noMoreData1){
-          return;
-        }
-        this.pageNum1 ++;
-        let param = {
-          pageNum : this.pageNum1,
-          pageSize : this.pageSize1
-        }
-        this.$api.post('history/joinBuyList',param, response => {
-          if(response.data){
-            response.data.forEach((value,index,arr) => {
-              this.items1.push(value);
-            })
-            if(response.data.length < this.pageSize1){
-              this.noMoreData1 = true;
-            }
-            this.bottom += response.data.length;
-          }else{
-            this.noMoreData1 = true;
+            this.noMoreData = true;
           }
 
           done();

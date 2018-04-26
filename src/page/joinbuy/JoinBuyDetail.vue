@@ -103,7 +103,11 @@ import {dateFtt} from '../../utils/date-util.js';
         return dateFtt('hh:mm:ss',new Date(date));
       },
       playNameFormate(name){
-        return new Array(name.length).join('*') + name.substr(-1);
+        if(name.length > 2){
+          return name.substr(0,1) + new Array(name.length - 1).join('*') + name.substr(-1);
+        }else{
+          return  new Array(name.length).join('*') + name.substr(-1);
+        }
       }
     }
   }
