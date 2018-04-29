@@ -10,7 +10,7 @@
                       <!-- <span class="lottery-tip bg-blue ">未开奖</span> -->
                       <span v-if="orderDetail.orderStatus == 0" class="lottery-tip bg-blue">{{statusFormate(orderDetail.orderStatus)}}</span>
                       <span v-if="orderDetail.orderStatus == 1" class="lottery-tip bg-red">{{statusFormate(orderDetail.orderStatus)}}</span>
-                      <span v-if="orderDetail.orderStatus == 2" class="lottery-tip bg-gray">{{statusFormate(orderDetail.orderStatus)}}</span>
+                      <span v-if="orderDetail.orderStatus == 2 || orderDetail.orderStatus == 3 " class="lottery-tip bg-gray">{{statusFormate(orderDetail.orderStatus)}}</span>
                   </div>
                   <div style="width:100%;border:1px solid #a59f9f;overflow:scroll;color:gray;">
                       <table class="selected-num">
@@ -80,7 +80,7 @@
           case 2://未中奖
             return '未中奖';
           case 3:
-            return '';
+            return '合买失败';
           default:
             return '未开奖';
         }

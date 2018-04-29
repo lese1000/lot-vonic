@@ -17,7 +17,7 @@
         <div class="card-content">
           <div class="card-content-inner" style="color:red;text-align:center; ">
             <ul>
-              <li v-for="item in rechargeList">用户 {{playNameFormate(item.playerName)}} 充值了 {{item.rechargeVal}} 元 </li>
+              <li v-for="(item,index) in rechargeList">{{index + 1}}. 用户 {{playNameFormate(item.playerName)}} 充值了 {{item.rechargeVal}} 元 </li>
             </ul>
           </div>
         </div>

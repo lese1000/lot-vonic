@@ -28,6 +28,7 @@ import Personal from './page/tabbar/Personal.vue'
 import About from './page/personal/About.vue'
 import ChangePassword from './page/personal/ChangePassword.vue'
 import ChangePayPassword from './page/personal/changePayPassword.vue'
+import BalanceRecord from './page/personal/BalanceRecord.vue'
 
 // 活动
 import ActivityDetail from './page/activity/ActivityDetail.vue'
@@ -89,6 +90,7 @@ const routes = [
   { path: '/personal/about', component: About },
   { path: '/personal/changepassword', component: ChangePassword ,meta:{requireAuth:true}},
   { path: '/personal/changePayPassword', component: ChangePayPassword ,meta:{requireAuth:true}},
+  { path: '/personal/balanceRecord', component: BalanceRecord ,meta:{requireAuth:true}},
 
 
   //活动
@@ -96,7 +98,7 @@ const routes = [
 
   //通知
   { path: '/notice/index', component : Notice} ,
-  { path: '/notice/detail', component : NoticeDetail},
+  { path: '/notice/detail/:type/:id', component : NoticeDetail},
   //历史投注
   { path: '/history/index',component : BuyHistory,meta:{requireAuth:true}},
 

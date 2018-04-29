@@ -4,8 +4,8 @@
             :on-refresh="onRefresh"
             :on-infinite="onInfinite">
             <list class=" hl-list-borderless">
-              <item class=" item-icon-right" @click.native="$router.forward('/notice/detail')">
-                关于充值账号变更通知
+              <item v-for="(item,index) in items" class=" item-icon-right" @click.native="toNoticeDetial(item.id)">
+                {{index + 1}}. {{item.title}}
                 <i class="icon ion-ios-arrow-right"></i>
               </item>
             </list>
@@ -23,15 +23,17 @@ export default {
       items : [],
       noMoreData : false,
       pageNum : 1,
-      pageSize : 10
+      pageSize : 10,
+      acType : 2
     }
   },
   mounted (){
     let param = {
       pageNum : this.pageNum,
-      pageSize : this.pageSize
+      pageSize : this.pageSize,
+      acType : this.acType
     }
-    this.$api.post('recharge/listRechargeRecord',param, response => {
+    this.$api.post('acContent/list',param, response => {
       if(response.data){
         this.items = response.data;
         if(response.data.length < this.pageSize){
@@ -53,9 +55,10 @@ export default {
     onRefresh(done) {
       let param = {
         pageNum : 1,
-        pageSize : this.pageNum * this.pageSize
+        pageSize : this.pageNum * this.pageSize,
+        acType : this.acType
       }
-      this.$api.post('recharge/listRechargeRecord',param, response => {
+      this.$api.post('acContent/list',param, response => {
         if(response.data){
           this.items = response.data;
           if(response.data.length < (this.pageNum * this.pageSize)){
@@ -76,9 +79,10 @@ export default {
       this.pageNum ++;
       let param = {
         pageNum : this.pageNum,
-        pageSize : this.pageSize
+        pageSize : this.pageSize,
+        acType : this.acType
       }
-      this.$api.post('recharge/listRechargeRecord',param, response => {
+      this.$api.post('acContent/list',param, response => {
         if(response.data){
           response.data.forEach((value,index,arr) => {
             this.items.push(value);
@@ -93,6 +97,9 @@ export default {
 
         done();
       })
+    },
+    toNoticeDetial(id) {
+      $router.forward('/notice/detail/1/'+ id);
     },
 
 

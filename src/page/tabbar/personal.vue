@@ -10,7 +10,7 @@
         </item> -->
         <item>
           <!-- style="margin:0 auto;width:80%;padding:5px 0;color:white;border-radius:5px;" class="bg-blue" -->
-          <div class="button   button-positive" style="width:100%;">
+          <div class="button   button-positive" style="width:100%;" @click="toBalanceRecord">
             <div style="text-align:center;">
                 余额
             </div>
@@ -109,6 +109,9 @@ import {copyToClipboard} from '../../utils/other-util'
         }else{
           $toast.show('您的浏览器不支持点击复制', 3000);
         }
+      },
+      toBalanceRecord() {
+        $router.forward('/personal/balanceRecord');
       }
     }
   }

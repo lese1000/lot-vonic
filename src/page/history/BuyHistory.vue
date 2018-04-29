@@ -16,7 +16,7 @@
                             <!-- <span class="lottery-tip bg-red">已中奖</span> -->
                             <span v-if="item.orderStatus == 0" class="lottery-tip bg-blue">{{statusFormate(item.orderStatus)}}</span>
                             <span v-if="item.orderStatus == 1" class="lottery-tip bg-red">{{statusFormate(item.orderStatus)}}</span>
-                            <span v-if="item.orderStatus == 2" class="lottery-tip bg-gray">{{statusFormate(item.orderStatus)}}</span>
+                            <span v-if="item.orderStatus == 2 || item.orderStatus == 3" class="lottery-tip bg-gray">{{statusFormate(item.orderStatus)}}</span>
                             <div class="betting-content">
                                 <table class="selected-num">
                                   <tr>
@@ -93,28 +93,13 @@ import {dateFtt} from '../../utils/date-util';
 
     methods: {
       onTabClick(index) {
-        let innerHeight = this.$el.querySelector('.scroll-inner').clientHeight ;
-        console.log('innerHeight:'+innerHeight);
-        let scrollTop = this.$el.querySelector('.scroll').scrollTop = 0
-          console.log('scrollTop:'+scrollTop);
-          let outerHeight = this.$el.querySelector('.scroll').clientHeight
-          console.log('outerHeight:'+outerHeight);
-          let ptrHeight = this.$el.querySelector('.pull-to-refresh-layer').clientHeight ;
-          console.log('ptrHeight:'+ptrHeight);
-          let infiniteHeight = this.$el.querySelector('.infinite-layer').clientHeight
-          console.log('infiniteHeight:'+infiniteHeight);
-          let bottom = innerHeight - outerHeight - scrollTop - ptrHeight
-          console.log('bottom:'+bottom);
-
-
-
         //不是当前tab重新初始化
         if(this.tabIndex == index){
           return;
         }else{
-          this.pageNum = 1;
-          this.pageSize = 10;
-          this.noMoreData = false;
+          // this.pageNum = 1;
+          // this.pageSize = 10;
+          // this.noMoreData = false;
           this.top = 0;
           this.bottom = 0;
         }
@@ -209,7 +194,7 @@ import {dateFtt} from '../../utils/date-util';
           case 2://未中奖
             return '未中奖';
           case 3:
-            return '';
+            return '合买失败';
           default:
             return '未开奖';
         }

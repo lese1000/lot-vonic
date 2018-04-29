@@ -17,7 +17,7 @@
                           <span style="color:red;">合买编号：<span class="positive">{{item.orderNum}}</span></span>
                           <span v-if="item.orderStatus == 0" class="lottery-tip bg-blue">{{statusFormate(item.orderStatus)}}</span>
                           <span v-if="item.orderStatus == 1" class="lottery-tip bg-red">{{statusFormate(item.orderStatus)}}</span>
-                          <span v-if="item.orderStatus == 2" class="lottery-tip bg-gray">{{statusFormate(item.orderStatus)}}</span>
+                          <span v-if="item.orderStatus == 2 || item.orderStatus == 3 " class="lottery-tip bg-gray">{{statusFormate(item.orderStatus)}}</span>
 
                       </div>
 
@@ -170,7 +170,7 @@
           case 2://未中奖
             return '未中奖';
           case 3:
-            return '';
+            return '合买失败';
           default:
             return '未开奖';
         }

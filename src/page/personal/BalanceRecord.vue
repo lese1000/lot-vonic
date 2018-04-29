@@ -1,0 +1,134 @@
+<template>
+  <div class="page has-navbar" v-nav="{title: '余额明细',showBackButton: true, onBackButtonClick: back }">
+    <scroll class="page-content"
+            :on-refresh="onRefresh"
+            :on-infinite="onInfinite">
+      <item v-for="(item, index) in items" @click.native="onItemClick(index)" :class="{'item-stable': index % 2 == 0}">
+        <b>{{index + 1}}.</b> {{balanceTypeFormate(item.balanceType)}},<b>{{item.balanceVal}} 元</b> ,时间:{{dateFormate(item.createDate)}}。
+      </item>
+
+      <div v-if="noMoreData" slot="infinite" class="text-center">没有更多数据</div>
+    </scroll>
+  </div>
+</template>
+<script>
+import {dateFtt} from '../../utils/date-util.js';
+  export default {
+    data () {
+      return {
+        items: [],
+        infiniteCount: 0,
+        pageNum : 1,
+        pageSize : 10,
+        noMoreData : false
+      }
+    },
+    created() {
+      console.log(dateFtt('hh:mm:ss',new Date()));
+    },
+
+    mounted() {
+      let param = this.$route.params;
+      param.pageNum = this.pageNum;
+      param.pageSize = this.pageSize;
+      this.$api.post('balance/listBalanceRecord',param,data => {
+        console.log(data.data);
+
+        if(data.data){
+          this.items = data.data;
+          if(data.data.length < this.pageSize){
+            this.noMoreData = true;
+          }
+          this.bottom = data.data.length;
+        }else{
+            this.noMoreData = true;
+        }
+      })
+      console.log(this.noMoreData);
+      this.top = 1
+
+    },
+
+    methods: {
+      back (index) {
+          $router.replace('/index/personal');
+      },
+      onRefresh(done) {
+        let param = this.$route.params;
+        param.pageNum = 1;
+        param.pageSize = this.pageNum * this.pageSize;
+        this.$api.post('balance/listBalanceRecord',param,data => {
+          if(data.data){
+            this.items = data.data;
+            if(data.data.length < (this.pageNum * this.pageSize)){
+              this.noMoreData = true;
+            }
+          }else{
+              this.noMoreData = true;
+          }
+          done();
+        })
+      },
+
+      onInfinite(done) {
+        if(this.noMoreData){
+          return;
+        }
+        this.pageNum ++;
+        let param = this.$route.params;
+        param.pageNum = this.pageNum;
+        param.pageSize = this.pageSize;
+        this.$api.post('balance/listBalanceRecord',param,data => {
+
+          if(data.data){
+            if(data.data.length < this.pageSize){
+              this.noMoreData = true;
+            }
+            data.data.forEach((value,index,arr) => {
+              this.items.push(value);
+            })
+            this.bottom += data.data.length;
+          }else{
+              this.noMoreData = true;
+          }
+
+          done();
+        })
+      },
+
+      onItemClick(index) {
+        console.log(index)
+      },
+      dateFormate(date) {
+        return dateFtt('yyyy-MM-dd hh:mm:ss',new Date(date));
+      },
+      playNameFormate(name){
+        if(name.length > 2){
+          return name.substr(0,1) + new Array(name.length - 1).join('*') + name.substr(-1);
+        }else{
+          return  new Array(name.length).join('*') + name.substr(-1);
+        }
+      },
+      balanceTypeFormate(type){
+        switch (type) {
+          case 1:
+            return '+ 充值';
+            case 2:
+              return '- 提现';
+              case 3:
+                return '- 消费';
+                case 4:
+                  return '+ 中奖';
+                  case 5:
+                    return '+ 活动奖励';
+                    case 6:
+                      return '+ 积分兑换';
+                      case 7:
+                        return '+ 合买退款';
+          default:
+            return '';
+        }
+      }
+    }
+  }
+</script>
