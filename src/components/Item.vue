@@ -17,6 +17,19 @@
       <i class="icon ion-ios-arrow-right"></i>
     </item>
   </list>
+  <!--eg2-->
+  <list class="list-ios hl-list-borderless">
+    <div class="item item-borderless hl-item item-icon-right" >
+      <div class="hairline-top"></div>
+      <div class="hairline-bottom"></div>
+
+      登录密码
+      <span class="item-note">修改</span>
+      <i class="icon ion-ios-arrow-right"></i>
+    </div>
+  </list>
+
+
 
 
 </template>

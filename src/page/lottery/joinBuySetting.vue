@@ -185,7 +185,7 @@
           }).then(() => {
             //清除cookie中的缓存
             this.clearAll();
-            this.router.replace('/lottery/luckfive');
+            this.$router.replace('/lottery/luckfive');
           })
         });
         // $dialog.confirm({

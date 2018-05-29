@@ -1,11 +1,5 @@
 <template>
-  <div class="page has-navbar" v-nav="{
-      title: '幸运五分彩：前三组选',
-      showBackButton: true,
-      onBackButtonClick: back,
-      showMenuButton: true,
-      onMenuButtonClick: showPlayInstructionsModal
-    }">
+  <div class="page has-navbar" v-nav="titleBar">
     <div class="page-content">
 
       <div class="card">
@@ -132,10 +126,19 @@ import {getCookie,setCookie,delCookie} from '../../utils/cookie-util.js'
         ],
         playInstructionsModal : undefined,//玩法说明模态框
         selectedRuleId : 4, //玩法规则ID
+        selectedRuleName : '前三组选',
         selectedLotteryTypeId : 1, //彩种类型ID
+        selectedLotteryTypeName : '欢乐11选5',
         singlePrice : 2,//单注价格
         lotteryNumId : 1, //期号
         lotteryNumInfo : {} ,
+        titleBar : {
+            title: '欢乐11选5:前三组选',
+            showBackButton: true,
+            onBackButtonClick: this.back,
+            showMenuButton: false,//标题栏右侧按钮
+            onMenuButtonClick: this.showPlayInstructionsModal
+          }
 
       }
     },
@@ -154,6 +157,17 @@ import {getCookie,setCookie,delCookie} from '../../utils/cookie-util.js'
         this.bettingInfoList = JSON.parse(param.bettingInfoStr);
         //统计投注数和金额
         this.countTotalBettingAndMoney();
+      }
+      
+      //设置标题栏
+      let tmpLotteryType = getCookie('lotteryType');
+      if(tmpLotteryType){
+        let lotteryType = JSON.parse(tmpLotteryType);
+        this.selectedLotteryTypeId = lotteryType.id;
+        this.selectedLotteryTypeName = lotteryType.lotteryTypeName;
+
+        this.titleBar.title = lotteryType.lotteryTypeName + ":" +this.selectedRuleName;
+
       }
 
 
@@ -179,7 +193,11 @@ import {getCookie,setCookie,delCookie} from '../../utils/cookie-util.js'
      this.timerId = null;
    },
 
-
+   computed : {
+     navTitle :function() {
+       return this.selectedLotteryTypeName + ":" + this.selectedRuleName;
+     }
+   },
     methods: {
       showPlayInstructionsModal() {
         this.playInstructionsModal.show()
@@ -187,7 +205,7 @@ import {getCookie,setCookie,delCookie} from '../../utils/cookie-util.js'
       getNewestLotteryNum () {
         //获取最新的期号
         let param = {
-          lotteryTypeId : this.lotteryNumId
+          lotteryTypeId : this.selectedLotteryTypeId
         }
         this.$api.post('lotteryNum/getNewest',param,data => {
           this.lotteryNumInfo = data.data;
@@ -225,7 +243,13 @@ import {getCookie,setCookie,delCookie} from '../../utils/cookie-util.js'
        if (minutes <= 0 && seconds <= 0) {
          window.clearInterval(this.timerId);
          this.timerId = null;
-         this.getNewestLotteryNum();
+         $dialog.alert({
+           theme: 'ios',
+           title: '当前期号已结束投注，自动获取下一期',
+           okText: '好'
+         }).then(() => {
+           this.getNewestLotteryNum();
+         })
        }
      },
 
